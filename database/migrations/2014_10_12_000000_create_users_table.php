@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('username')->unique(); 
             $table->tinyInteger('role_id')->nullable();
             $table->string('password'); 
+            $table->integer('branch_id')->nullable();  
             $table->timestamps();
         });
     }

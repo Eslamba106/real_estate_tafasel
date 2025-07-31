@@ -10,6 +10,16 @@ use Illuminate\Support\Facades\Session;
 class Helpers
 {
 
+    public static function get_settings($object, $type)
+    {
+        $config = null;
+        foreach ($object as $setting) {
+            if ($setting['type'] == $type) {
+                $config = $setting;
+            }
+        }
+        return $config;
+    }
     public static function pagination_limit()
     {
         $pagination_limit = BusinessSetting::where('type', 'pagination_limit')->first();

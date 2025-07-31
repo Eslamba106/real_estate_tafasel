@@ -34,26 +34,4 @@ if (! function_exists('translate')) {
     }
 
 }
-if (! function_exists('ui_change')) {
-
-    function ui_change($key , $position = 'dashboard')
-    {
-        $value = DB::connection('tenant')->table('ui_settings')->where('key', $key)->where('position' , $position)->first();
-
-        if (is_null($value)) {
-            $formattedValue = str_replace('_', ' ', $key);
-            $formattedValue = ucwords($formattedValue);
-
-            DB::connection('tenant')->table('ui_settings')->insert([
-                'key'   => $key,
-                'value' => $formattedValue,
-                'position' => $position,
-            ]);
-
-            return $formattedValue;
-        }
-
-        return $value->value;
-    }
-
-}
+ 

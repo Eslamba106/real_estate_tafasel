@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name', 30)->nullable();
             $table->longText('module_access')->nullable();
             $table->tinyInteger('status')->default(1);
+            $table->integer('branch_id')->nullable();  
             $table->timestamps();
         });
     }

@@ -97,7 +97,8 @@ a:hover {
 }
 
 .navbar-vertical-content {
-    background: #073b74;
+    background: #0d132b;
+    /* background: #073b74; */
     padding: 10px 15px;
 }
 
@@ -5284,7 +5285,8 @@ select {
     position: sticky;
     top: 0;
     z-index: 9;
-    background: #073b74;
+    background: #0d132b;
+    /* background: #073b74; */
 }
 
 aside .navbar-vertical-content {

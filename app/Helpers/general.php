@@ -114,7 +114,7 @@ if (! function_exists('get_settings')) {
 if (! function_exists('main_path')) {
     function main_path()
     {
-        return 'public/';
+        return '/';
         // return 'assets/';
     }
 }
