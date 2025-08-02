@@ -118,7 +118,7 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('/create', [ProjectController::class, 'create'])->name('project.create');
     Route::post('store', [ProjectController::class, 'store'])->name('project.store');
     Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('project.edit');
-    Route::get('/show/{id}', [ProjectController::class, 'show'])->name('project.show');
+    // Route::get('/show/{id}', [ProjectController::class, 'show'])->name('project.show');
     Route::get('/view_image/{id}', [ProjectController::class, 'view_image'])->name('project.show');
     Route::patch('/update/{id}', [ProjectController::class, 'update'])->name('project.update');
     Route::get('delete', [ProjectController::class, 'delete'])->name('project.delete');
@@ -129,7 +129,7 @@ Route::group(['prefix' => 'floor_management'], function () {
     Route::get('/create', [FloorManagementController::class, 'create'])->name('floor_management.create');
     Route::post('store', [FloorManagementController::class, 'store'])->name('floor_management.store');
     Route::get('/edit/{id}', [FloorManagementController::class, 'edit'])->name('floor_management.edit');
-    Route::get('/show/{id}', [FloorManagementController::class, 'show'])->name('floor_management.show');
+    // Route::get('/show/{id}', [FloorManagementController::class, 'show'])->name('floor_management.show');
     Route::get('/view_image/{id}', [FloorManagementController::class, 'view_image'])->name('floor_management.show');
     Route::patch('/update/{id}', [FloorManagementController::class, 'update'])->name('floor_management.update');
     Route::get('delete', [FloorManagementController::class, 'delete'])->name('floor_management.delete');
@@ -142,7 +142,7 @@ Route::group(['prefix' => 'unit_management'], function () {
     Route::get('/create', [UnitManagementController::class, 'create'])->name('unit_management.create');
     Route::post('store', [UnitManagementController::class, 'store'])->name('unit_management.store');
     Route::get('/edit/{id}', [UnitManagementController::class, 'edit'])->name('unit_management.edit');
-    Route::get('/show/{id}', [UnitManagementController::class, 'show'])->name('unit_management.show');
+    // Route::get('/show/{id}', [UnitManagementController::class, 'show'])->name('unit_management.show');
     Route::get('/view_image/{id}', [UnitManagementController::class, 'view_image'])->name('unit_management.show');
     Route::patch('/update/{id}', [UnitManagementController::class, 'update'])->name('unit_management.update');
     Route::get('delete', [UnitManagementController::class, 'delete'])->name('unit_management.delete');
