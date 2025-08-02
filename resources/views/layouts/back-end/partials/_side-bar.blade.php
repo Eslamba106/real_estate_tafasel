@@ -83,7 +83,6 @@
                                         ? 'block'
                                         : 'none' }}">
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_description'))
-
                                         <li class="nav-item {{ Request::is('unit_description/*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('unit_description.index') }}"
                                                 title="{{ translate('unit_description') }}">
@@ -98,7 +97,6 @@
                                         </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_condition'))
-
                                         <li class="nav-item {{ Request::is('unit_condition/*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('unit_condition.index') }}"
                                                 title="{{ translate('unit_condition') }}">
@@ -184,10 +182,10 @@
                                     ? 'active'
                                     : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                                    href="javascript:" title="{{ translate('project') }}">
+                                    href="javascript:" title="{{ translate('projects') }}">
                                     <i class="tio-shop nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                        {{ translate('project') }}
+                                        {{ translate('projects') }}
                                     </span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
@@ -195,7 +193,6 @@
                                         ? 'block'
                                         : 'none' }}">
                                     @if (\App\Helpers\Helpers::module_permission_check('project'))
-
                                         <li class="nav-item {{ Request::is('project/*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('project.index') }}"
                                                 title="{{ translate('project') }}">
@@ -224,7 +221,6 @@
                                         </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_management'))
-
                                         <li class="nav-item {{ Request::is('unit_management/*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('unit_management.index') }}"
                                                 title="{{ translate('unit_management') }}">
@@ -245,25 +241,49 @@
                             </li>
                         @endif
 
-                        @if (\App\Helpers\Helpers::module_permission_check('unit_master'))
-
-
-
+                        @if (\App\Helpers\Helpers::module_permission_check('theme_settings'))
                             <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('theme_settings/*') || Request::is('unit_management/*') || Request::is('floor_management/*')
                                     ? 'active'
                                     : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
-                                    href="{{ route('theme_settings') }}" title="{{ translate('theme_settings') }}">
+                                    href="javascript:" title="{{ translate('master_theme_settings') }}">
                                     <i class="tio-shop nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
-                                        {{ translate('theme_settings') }}
+                                        {{ translate('master_theme_settings') }}
                                     </span>
                                 </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{ Request::is('theme_settings/*') || Request::is('language/*')  
+                                        ? 'block'
+                                        : 'none' }}">
+                                    @if (\App\Helpers\Helpers::module_permission_check('theme_settings'))
+                                        <li class="nav-item {{ Request::is('theme_settings/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('theme_settings') }}"
+                                                title="{{ translate('theme_settings') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('theme_settings') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (\App\Helpers\Helpers::module_permission_check('language'))
+                                        <li class="nav-item {{ Request::is('language/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('business-settings.language.index') }}"
+                                                title="{{ translate('language') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('language') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                </ul>
                             </li>
                             <li class="nav-item pt-5">
                             </li>
-                            @endif
+                        @endif
                     </ul>
                 </div>
                 <!-- End Content -->

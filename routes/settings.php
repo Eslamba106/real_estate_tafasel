@@ -49,4 +49,4 @@ Route::group(['prefix' => 'custom-role'], function () {
     Route::post('delete', [CustomRoleController::class, 'delete'])->name('role_admin.delete');
 });
 
-Route::get('lang/{locale}', [LanguageController::class , 'lang'])->name('lang');
+Route::get('language/{locale}', [LanguageController::class , 'lang'])->name('lang');

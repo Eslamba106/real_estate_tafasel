@@ -154,7 +154,7 @@
   'unit_type' => 'Unit type',
   'unit_parking' => 'Unit parking',
   'view' => 'View',
-  'unit_master' => 'Unit master',
+  'unit_master' => 'اعدادات الوحدات السكنية',
   'floor' => 'Floor',
   'add_new_unit_condition' => 'Add new unit condition',
   'enter_unit_condition_name' => 'Enter unit condition name',
@@ -199,7 +199,7 @@
   'select_All' => 'Select All',
   'add_unit_description' => 'Add unit description',
   'delete_unit_description' => 'Delete unit description',
-  'project' => 'Project',
+  'project' => 'المشاريع',
   'floor_management' => 'Floor management',
   'units' => 'Units',
   'facility_transactions' => 'Facility transactions',
@@ -333,4 +333,5 @@
   'Previous' => 'Previous',
   'Language_Added' => 'Language Added',
   'Default_Language_Changed' => 'Default Language Changed',
+  'master_theme_settings' => 'اعدادت التصميم',
 );
