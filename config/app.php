@@ -54,9 +54,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost/real_estate_management'),
+    'url' => env('APP_URL', 'https://tafasel.y-codex.org/'),
 
-    'asset_url' => 'http://localhost/real_estate_management/public/',
+    'asset_url' => 'https://tafasel.y-codex.org/public/',
 
     /*
     |--------------------------------------------------------------------------
