@@ -4,9 +4,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request; 
 use App\Models\BusinessSetting;
- 
-
- 
+use App\Models\ThemeSetting;
 
 if (! function_exists('clean_html')) {
     function clean_html($text = null)
@@ -119,6 +117,14 @@ if (! function_exists('main_path')) {
     }
 }
  
+if (! function_exists('file_main_path')) {
+    function file_main_path()
+    {
+        return 'public/';
+        // return 'assets/';
+    }
+}
+ 
   
  
 
@@ -177,4 +183,16 @@ if (!function_exists('uploadFile')) {
 }
 
 
+if (! function_exists('get_theme_settings')) {
+    function get_theme_settings($key)
+    {
+        if(ThemeSetting::where('key' , $key)->first()){
+
+            return  ThemeSetting::where('key' , $key)->first()->value;
+        }else{
+            $theme = ThemeSetting::create(['key' => $key]);
+            return $theme->value;
+        }
+    }
+}
  

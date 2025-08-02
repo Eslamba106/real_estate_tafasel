@@ -33,8 +33,8 @@ Route::group(['prefix' => 'auth'], function () {
         return view('auth.login');
     })->name('login_page');
 
-    Route::post('login', [AuthController::class ,'login'])->name('login');
-    Route::get('logout', [AuthController::class ,'logout'])->name('logout');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::get('dashboard', function () {
@@ -45,14 +45,13 @@ Route::get('dashboard', function () {
 
 
 // Unit Description
-Route::group(['prefix' => 'unit_description'], function () {
+Route::group(['prefix' => 'unit_description', 'middleware' => ['module:unit_description', 'auth']], function () {
     Route::get('/', [UnitDescriptionController::class, 'index'])->name('unit_description.index');
     Route::post('store', [UnitDescriptionController::class, 'store'])->name('unit_description.store');
     Route::get('/edit/{id}', [UnitDescriptionController::class, 'edit'])->name('unit_description.edit');
     Route::patch('/update/{id}', [UnitDescriptionController::class, 'update'])->name('unit_description.update');
     Route::get('delete', [UnitDescriptionController::class, 'delete'])->name('unit_description.delete');
     Route::post('/status-update', [UnitDescriptionController::class, 'statusUpdate'])->name('unit_description.status-update');
-
 });
 
 // Unit Type
@@ -63,7 +62,6 @@ Route::group(['prefix' => 'unit_type'], function () {
     Route::patch('/update/{id}', [UnitTypeController::class, 'update'])->name('unit_type.update');
     Route::get('delete', [UnitTypeController::class, 'delete'])->name('unit_type.delete');
     Route::post('/status-update', [UnitTypeController::class, 'statusUpdate'])->name('unit_type.status-update');
-
 });
 
 // Unit Condition
@@ -74,7 +72,6 @@ Route::group(['prefix' => 'unit_condition'], function () {
     Route::patch('/update/{id}', [UnitConditionController::class, 'update'])->name('unit_condition.update');
     Route::get('delete', [UnitConditionController::class, 'delete'])->name('unit_condition.delete');
     Route::post('/status-update', [UnitConditionController::class, 'statusUpdate'])->name('unit_condition.status-update');
-
 });
 
 // Unit Parking
@@ -85,7 +82,6 @@ Route::group(['prefix' => 'unit_parking'], function () {
     Route::patch('/update/{id}', [UnitParkingController::class, 'update'])->name('unit_parking.update');
     Route::get('delete', [UnitParkingController::class, 'delete'])->name('unit_parking.delete');
     Route::post('/status-update', [UnitParkingController::class, 'statusUpdate'])->name('unit_parking.status-update');
-
 });
 
 // View
@@ -96,7 +92,6 @@ Route::group(['prefix' => 'view'], function () {
     Route::patch('/update/{id}', [ViewController::class, 'update'])->name('view.update');
     Route::get('delete', [ViewController::class, 'delete'])->name('view.delete');
     Route::post('/status-update', [ViewController::class, 'statusUpdate'])->name('view.status-update');
-
 });
 // property type
 Route::group(['prefix' => 'property_type'], function () {
@@ -106,7 +101,6 @@ Route::group(['prefix' => 'property_type'], function () {
     Route::patch('/update/{id}', [PropertyTypeController::class, 'update'])->name('property_type.update');
     Route::get('delete', [PropertyTypeController::class, 'delete'])->name('property_type.delete');
     Route::post('/status-update', [PropertyTypeController::class, 'statusUpdate'])->name('property_type.status-update');
-
 });
 // floors
 Route::group(['prefix' => 'floor'], function () {
@@ -116,7 +110,6 @@ Route::group(['prefix' => 'floor'], function () {
     Route::patch('/update/{id}', [FloorController::class, 'update'])->name('floor.update');
     Route::get('delete', [FloorController::class, 'delete'])->name('floor.delete');
     Route::post('/status-update', [FloorController::class, 'statusUpdate'])->name('floor.status-update');
-
 });
 
 // Project 
@@ -128,10 +121,9 @@ Route::group(['prefix' => 'project'], function () {
     Route::get('/show/{id}', [ProjectController::class, 'show'])->name('project.show');
     Route::get('/view_image/{id}', [ProjectController::class, 'view_image'])->name('project.show');
     Route::patch('/update/{id}', [ProjectController::class, 'update'])->name('project.update');
-    Route::get('delete', [ProjectController::class, 'delete'])->name('project.delete'); 
-
+    Route::get('delete', [ProjectController::class, 'delete'])->name('project.delete');
 });
- 
+
 Route::group(['prefix' => 'floor_management'], function () {
     Route::get('/', [FloorManagementController::class, 'index'])->name('floor_management.index');
     Route::get('/create', [FloorManagementController::class, 'create'])->name('floor_management.create');
@@ -140,9 +132,8 @@ Route::group(['prefix' => 'floor_management'], function () {
     Route::get('/show/{id}', [FloorManagementController::class, 'show'])->name('floor_management.show');
     Route::get('/view_image/{id}', [FloorManagementController::class, 'view_image'])->name('floor_management.show');
     Route::patch('/update/{id}', [FloorManagementController::class, 'update'])->name('floor_management.update');
-    Route::get('delete', [FloorManagementController::class, 'delete'])->name('floor_management.delete'); 
+    Route::get('delete', [FloorManagementController::class, 'delete'])->name('floor_management.delete');
     Route::post('status-update', [FloorManagementController::class, 'statusUpdate'])->name('floor_management.status-update');
-
 });
 
 // Units Management
@@ -160,6 +151,5 @@ Route::group(['prefix' => 'unit_management'], function () {
     Route::get('get_blocks_by_property_id/{id}', [UnitManagementController::class, 'get_blocks_by_property_id'])->name('unit_management.get_blocks_by_property_id');
     Route::get('get_floors_by_block_id/{id}', [UnitManagementController::class, 'get_floors_by_block_id'])->name('unit_management.get_floors_by_block_id');
     Route::get('get_units_by_floor_id/{floor_id}/{block_id}/{property_id}', [UnitManagementController::class, 'get_units_by_floor_id'])->name('unit_management.get_units_by_floor_id');
-Route::get('/get-floors-by-project', [UnitManagementController::class, 'getFloorsByProject'])->name('get.floors.by.project');
-
+    Route::get('/get-floors-by-project', [UnitManagementController::class, 'getFloorsByProject'])->name('get.floors.by.project');
 });

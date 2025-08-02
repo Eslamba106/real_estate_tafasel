@@ -60,7 +60,7 @@
                                             @endif
                                         @endforeach
                                     </a>
-                                    {{-- <ul class="dropdown-menu">
+                                    <ul class="dropdown-menu">
                                         @foreach(json_decode($lang['value'],true) as $key =>$data)
                                             @if($data['status']==1)
                                                 <li>
@@ -69,14 +69,14 @@
                                                         <img
                                                             class="{{Session::get('direction') === "rtl" ? 'ml-2' : 'mr-2'}}"
                                                             width="20"
-                                                            src="{{asset('assets/front-end')}}/img/flags/{{$data['code']}}.png"
+                                                            src="{{asset(main_path().'flags/')}}{{$data['code']}}.png"
                                                             alt="{{$data['name']}}"/>
                                                         <span class="text-capitalize">{{$data['name']}}</span>
                                                     </a>
                                                 </li>
                                             @endif
                                         @endforeach
-                                    </ul> --}}
+                                    </ul>
                                 </div>
                             </div>
                         </div>

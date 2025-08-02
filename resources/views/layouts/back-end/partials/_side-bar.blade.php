@@ -54,7 +54,7 @@
 
                         <!-- Unit Master -->
                         @if (\App\Helpers\Helpers::module_permission_check('unit_master'))
-                            
+
 
 
                             <li
@@ -84,90 +84,90 @@
                                         : 'none' }}">
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_description'))
 
-                                    <li class="nav-item {{ Request::is('unit_description/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('unit_description.index') }}"
-                                            title="{{ translate('unit_description') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('unit_description') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\UnitDescription::count() }}
+                                        <li class="nav-item {{ Request::is('unit_description/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('unit_description.index') }}"
+                                                title="{{ translate('unit_description') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('unit_description') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\UnitDescription::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_condition'))
 
-                                    <li class="nav-item {{ Request::is('unit_condition/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('unit_condition.index') }}"
-                                            title="{{ translate('unit_condition') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('unit_condition') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\UnitCondition::count() }}
+                                        <li class="nav-item {{ Request::is('unit_condition/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('unit_condition.index') }}"
+                                                title="{{ translate('unit_condition') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('unit_condition') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\UnitCondition::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_type'))
-                                    <li class="nav-item {{ Request::is('unit_type/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('unit_type.index') }}"
-                                            title="{{ translate('unit_type') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('unit_type') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\UnitType::count() }}
+                                        <li class="nav-item {{ Request::is('unit_type/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('unit_type.index') }}"
+                                                title="{{ translate('unit_type') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('unit_type') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\UnitType::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('view'))
-                                    <li class="nav-item {{ Request::is('view/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('view.index') }}"
-                                            title="{{ translate('view') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('view') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\View::count() }}
+                                        <li class="nav-item {{ Request::is('view/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('view.index') }}"
+                                                title="{{ translate('view') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('view') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\View::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('property_type'))
-                                    <li class="nav-item {{ Request::is('property_type/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('property_type.index') }}"
-                                            title="{{ translate('property_type') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('property_type') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\PropertyType::count() }}
+                                        <li class="nav-item {{ Request::is('property_type/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('property_type.index') }}"
+                                                title="{{ translate('property_type') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('property_type') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\PropertyType::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('floor'))
-                                    <li class="nav-item {{ Request::is('floor/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('floor.index') }}"
-                                            title="{{ translate('floor') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('floor') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\Floor::count() }}
+                                        <li class="nav-item {{ Request::is('floor/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('floor.index') }}"
+                                                title="{{ translate('floor') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('floor') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\Floor::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
-                                    @endif 
+                                            </a>
+                                        </li>
+                                    @endif
 
                                 </ul>
                             </li>
@@ -176,86 +176,94 @@
 
                         <!-- Unit Master -->
                         @if (\App\Helpers\Helpers::module_permission_check('unit_master'))
-                            
+
 
 
                             <li
-                                class="navbar-vertical-aside-has-menu {{ (Request::is('project/*') ||
-                                Request::is('unit_management/*') ||
-                                Request::is('floor_management/*')  )
+                                class="navbar-vertical-aside-has-menu {{ Request::is('project/*') || Request::is('unit_management/*') || Request::is('floor_management/*')
                                     ? 'active'
                                     : '' }}">
                                 <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
                                     href="javascript:" title="{{ translate('project') }}">
-                                    <i class="tio-receipt-outlined nav-icon"></i>
+                                    <i class="tio-shop nav-icon"></i>
                                     <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
                                         {{ translate('project') }}
                                     </span>
                                 </a>
                                 <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
-                                    style="display: {{ (Request::is('project/*') ||
-                                    Request::is('unit_management/*') ||
-                                    Request::is('floor_management/*') )
+                                    style="display: {{ Request::is('project/*') || Request::is('unit_management/*') || Request::is('floor_management/*')
                                         ? 'block'
                                         : 'none' }}">
                                     @if (\App\Helpers\Helpers::module_permission_check('project'))
 
-                                    <li class="nav-item {{ Request::is('project/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('project.index') }}"
-                                            title="{{ translate('project') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('project') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\Project::count() }}
+                                        <li class="nav-item {{ Request::is('project/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('project.index') }}"
+                                                title="{{ translate('project') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('project') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\Project::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
-                                     @if (\App\Helpers\Helpers::module_permission_check('floor_management'))
-                                    <li class="nav-item {{ Request::is('floor_management/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('floor_management.index') }}"
-                                            title="{{ translate('floor_management') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('floor_management') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\FloorManagement::count() }}
+                                    @if (\App\Helpers\Helpers::module_permission_check('floor_management'))
+                                        <li class="nav-item {{ Request::is('floor_management/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('floor_management.index') }}"
+                                                title="{{ translate('floor_management') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('floor_management') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\FloorManagement::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('unit_management'))
 
-                                    <li class="nav-item {{ Request::is('unit_management/*') ? 'active' : '' }}">
-                                        <a class="nav-link" href="{{ route('unit_management.index') }}"
-                                            title="{{ translate('unit_management') }}">
-                                            <span class="tio-circle nav-indicator-icon"></span>
-                                            <span class="text-truncate">
-                                                {{ translate('unit_management') }}
-                                                <span class="badge badge-soft-danger badge-pill ml-1">
-                                                    {{ \App\Models\UnitManagement::count() }}
+                                        <li class="nav-item {{ Request::is('unit_management/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('unit_management.index') }}"
+                                                title="{{ translate('unit_management') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('unit_management') }}
+                                                    <span class="badge badge-soft-danger badge-pill ml-1">
+                                                        {{ \App\Models\UnitManagement::count() }}
+                                                    </span>
                                                 </span>
-                                            </span>
-                                        </a>
-                                    </li>
+                                            </a>
+                                        </li>
                                     @endif
-                                   
-                               
+
+
 
                                 </ul>
                             </li>
                         @endif
-                        <!--Unit Master Ends-->
+
+                        @if (\App\Helpers\Helpers::module_permission_check('unit_master'))
 
 
 
-
-
-                        <li class="nav-item pt-5">
-                        </li>
+                            <li
+                                class="navbar-vertical-aside-has-menu {{ Request::is('theme_settings/*') || Request::is('unit_management/*') || Request::is('floor_management/*')
+                                    ? 'active'
+                                    : '' }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                    href="{{ route('theme_settings') }}" title="{{ translate('theme_settings') }}">
+                                    <i class="tio-shop nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                        {{ translate('theme_settings') }}
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item pt-5">
+                            </li>
+                            @endif
                     </ul>
                 </div>
                 <!-- End Content -->
