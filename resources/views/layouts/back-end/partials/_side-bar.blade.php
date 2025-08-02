@@ -241,6 +241,50 @@
                             </li>
                         @endif
 
+                        @if (\App\Helpers\Helpers::module_permission_check('team'))
+                            <li
+                                class="navbar-vertical-aside-has-menu {{ Request::is('team/*') || Request::is('unit_management/*') || Request::is('floor_management/*')
+                                    ? 'active'
+                                    : '' }}">
+                                <a class="js-navbar-vertical-aside-menu-link nav-link nav-link-toggle"
+                                    href="javascript:" title="{{ translate('master_team') }}">
+                                    <i class="tio-shop nav-icon"></i>
+                                    <span class="navbar-vertical-aside-mini-mode-hidden-elements text-truncate">
+                                        {{ translate('master_team') }}
+                                    </span>
+                                </a>
+                                <ul class="js-navbar-vertical-aside-submenu nav nav-sub"
+                                    style="display: {{ Request::is('team/*') || Request::is('language/*')  
+                                        ? 'block'
+                                        : 'none' }}">
+                                    @if (\App\Helpers\Helpers::module_permission_check('team'))
+                                        <li class="nav-item {{ Request::is('team/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('team.index') }}"
+                                                title="{{ translate('team') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('teams') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                    @if (\App\Helpers\Helpers::module_permission_check('employees'))
+                                        <li class="nav-item {{ Request::is('employees/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('employee.index') }}"
+                                                title="{{ translate('employees') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('employees') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                   
+                                </ul>
+                            </li>
+                            <li class="nav-item pt-5">
+                            </li>
+                        @endif
                         @if (\App\Helpers\Helpers::module_permission_check('theme_settings'))
                             <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('theme_settings/*') || Request::is('unit_management/*') || Request::is('floor_management/*')

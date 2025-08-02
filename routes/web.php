@@ -1,7 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UnitManagementController;
 use App\Http\Controllers\FloorManagementController;
@@ -152,4 +154,29 @@ Route::group(['prefix' => 'unit_management'], function () {
     Route::get('get_floors_by_block_id/{id}', [UnitManagementController::class, 'get_floors_by_block_id'])->name('unit_management.get_floors_by_block_id');
     Route::get('get_units_by_floor_id/{floor_id}/{block_id}/{property_id}', [UnitManagementController::class, 'get_units_by_floor_id'])->name('unit_management.get_units_by_floor_id');
     Route::get('/get-floors-by-project', [UnitManagementController::class, 'getFloorsByProject'])->name('get.floors.by.project');
+});
+
+
+
+// Teams
+Route::group(['prefix' => 'team', 'middleware' => ['module:team', 'auth']], function () {
+    Route::get('/', [TeamController::class, 'index'])->name('team.index');
+    Route::post('store', [TeamController::class, 'store'])->name('team.store');
+    Route::get('/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
+    Route::patch('/update/{id}', [TeamController::class, 'update'])->name('team.update');
+    Route::get('delete', [TeamController::class, 'delete'])->name('team.delete');
+    Route::post('/status-update', [TeamController::class, 'statusUpdate'])->name('team.status-update');
+});
+
+ 
+// Employee
+Route::group(['prefix' => 'employees'], function () {
+    Route::get('/', [EmployeeController::class, 'index'])->name('employee.index');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employee.create');
+    Route::post('store', [EmployeeController::class, 'store'])->name('employee.store');
+    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employee.edit');
+    Route::patch('/update/{id}', [EmployeeController::class, 'update'])->name('employee.update');
+    Route::get('delete', [EmployeeController::class, 'delete'])->name('employee.delete');
+    Route::post('/status-update', [EmployeeController::class, 'statusUpdate'])->name('employee.status-update');
+
 });

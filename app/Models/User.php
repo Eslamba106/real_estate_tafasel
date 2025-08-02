@@ -20,6 +20,9 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'username',
+        'my_name',
+        'phone',
+        'status',
         'email',
         'password',
     ];

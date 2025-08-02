@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 @php
-    $lang = Session::get('locale');
+    $lang = session()->get('direction'); 
 @endphp
 @section('title', translate($route))
 @push('css_or_js')
@@ -23,19 +23,19 @@
             $currentUrl = url()->current();
             $segments = explode('/', $currentUrl);
             $last = end($segments);
-            $facility_masters = [
-                'department',
-                'complaint_category',
-                'freezing',
-                'main_complaint',
-                'employee_type',
-                'priority',
-                'asset_group',
-                'work_status',
+            $team_master = [
+                'team',
+                // 'complaint_category',
+                // 'freezing',
+                // 'main_complaint',
+                // 'employee_type',
+                // 'priority',
+                // 'asset_group',
+                // 'work_status',
             ];
         @endphp
-        @if (in_array($last, $facility_masters))
-            @include('admin-views.inline_menu.facility_master.inline-menu')
+        @if (in_array($last, $team_master))
+            @include('admin-views.inline_menu.team_master.inline-menu')
         @else
             @include('admin-views.inline_menu.property_master.inline-menu')
         @endif
@@ -46,7 +46,7 @@
                     <div class="card-header">
                         {{ translate('edit_' . $route) }}
                     </div>
-                    <div class="card-body" style="text-align: {{ $lang === 'ar' ? 'right' : 'left' }};">
+                    <div class="card-body" style="text-align: {{ $lang === 'rtl' ? 'right' : 'left' }};">
                         <form action="{{ route($route . '.update', $main->id) }}" method="post">
                             @csrf
                             @method('patch')
@@ -56,6 +56,7 @@
                                 <input type="text" name="name" class="form-control" value="{{ $main->name }}"
                                     placeholder="{{ translate('enter_' . $route . '_name') }}">
                             </div>
+                            @if ($route != 'team')
 
                             <div class="form-group">
                                 <label class="title-color" for="status">
@@ -75,6 +76,7 @@
 
                                 </div>
                             </div>
+                            @endif
                             <div class="d-flex flex-wrap gap-2 justify-content-end">
                                 <button type="reset" class="btn btn-secondary">{{ translate('reset') }}</button>
                                 <button type="submit" class="btn btn--primary">{{ translate('submit') }}</button>

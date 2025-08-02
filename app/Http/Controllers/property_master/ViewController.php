@@ -21,7 +21,7 @@ class ViewController extends Controller
         // if ($request->bulk_action_btn === 'update_status'  && is_array($ids) && count($ids)) {
         //     $data = ['status' => 1, 'worker' => $request->worker];
         //     View::whereIn('id', $ids)->update($data);
-        //     return back()->with('success', __('general.updated_successfully'));
+        //     return back()->with('success', translate('general.updated_successfully'));
         // }
         $search      = $request['search'];
         $query_param = $search ? ['search' => $request['search']] : '';
@@ -53,7 +53,7 @@ class ViewController extends Controller
         ]);
         try{
             $view_services = $this->view_services->storePropertyMasterModal($request);
-            return redirect()->route('view.index')->with('success',__('property_master.added_successfully'));
+            return redirect()->route('view.index')->with('success',translate('added_successfully'));
             }catch(\Exception $e){
                 Log::error($e->getMessage());
                 return redirect()->back()->with("error", $e->getMessage());
@@ -75,7 +75,7 @@ class ViewController extends Controller
         try{
             // $request->id = $id;
             $view_services = $this->view_services->updatePropertyMasterModal($request);
-            return redirect()->route('view.index')->with('success',__('property_master.updated_successfully'));
+            return redirect()->route('view.index')->with('success',translate('updated_successfully'));
         }catch(\Exception $e){
             return redirect()->back()->with("error", $e->getMessage());
         }
@@ -85,8 +85,8 @@ class ViewController extends Controller
         // dd($view_services);
 
         $view_services_delete = $this->view_services->deletePropertyMasterModal($request->id);
-        ($view_services_delete == true) ? redirect()->route("view.index")->with("success",__('property_master.deleted_successfully'))
-        : redirect()->back()->with('error',__('general.error_deleted'));
+        ($view_services_delete == true) ? redirect()->route("view.index")->with("success",translate('deleted_successfully'))
+        : redirect()->back()->with('error',translate('error_deleted'));
     }
     public function statusUpdate(Request $request)
     {
@@ -95,7 +95,7 @@ class ViewController extends Controller
         $main->update([
             'status' => ($request->status == 1) ? 'active' : 'inactive',
         ]);
-        return redirect()->back()->with('success',__('property_master.updated_successfully'));
+        return redirect()->back()->with('success',translate('updated_successfully'));
     }
 
 }

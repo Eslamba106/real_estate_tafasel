@@ -33,6 +33,8 @@
     @if (Session::get('direction') === 'rtl')
         <link rel="stylesheet" href="{{ asset('assets/back-end') }}/css/menurtl.css">
     @endif
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
+
     {{-- light box --}}
     <link rel="stylesheet" href="{{ asset('css/lightbox.css') }}">
     @stack('css_or_js')
@@ -143,6 +145,24 @@
                     ProgressBar: true
                 });
             @endforeach
+        </script>
+    @endif
+     @if (Session::has('success'))
+        <script>
+            swal("Message", "{{ Session::get('success') }}", 'success', {
+                button: true,
+                button: "Ok",
+                timer: 3000,
+            })
+        </script>
+    @endif
+    @if (Session::has('error'))
+        <script>
+            swal("Message", "{{ Session::get('error') }}", 'error', {
+                button: true,
+                button: "Ok",
+                timer: 3000,
+            })
         </script>
     @endif
     <!-- JS Plugins Init. -->
