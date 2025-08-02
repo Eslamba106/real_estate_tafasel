@@ -173,7 +173,7 @@
                         <!--Unit Master Ends-->
 
                         <!-- Unit Master -->
-                        @if (\App\Helpers\Helpers::module_permission_check('unit_master'))
+                        @if (\App\Helpers\Helpers::module_permission_check('projects'))
 
 
 
