@@ -279,6 +279,17 @@
                                             </a>
                                         </li>
                                     @endif
+                                    @if (\App\Helpers\Helpers::module_permission_check('roles'))
+                                        <li class="nav-item {{ Request::is('roles/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('role_admin.role_list') }}"
+                                                title="{{ translate('roles') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('roles') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
                                    
                                 </ul>
                             </li>

@@ -40,6 +40,7 @@ Route::group(['middleware' => ['module:system_settings','auth']], function () {
 });
 
 Route::group(['prefix' => 'custom-role'], function () {
+    Route::get('role_list', [CustomRoleController::class, 'role_list'])->name('role_admin.role_list');
     Route::get('create', [CustomRoleController::class, 'create'])->name('role_admin.create');
     Route::post('create', [CustomRoleController::class, 'store'])->name('role_admin.store');
     Route::get('update/{id}', [CustomRoleController::class, 'edit'])->name('role_admin.update');

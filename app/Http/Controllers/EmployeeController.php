@@ -9,7 +9,9 @@ use Illuminate\Http\Request;
 use App\Services\EmployeeServices;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\AdminRole;
 use Brian2694\Toastr\Facades\Toastr;
+use Exception;
 use Illuminate\Support\Facades\Hash;
 
 class EmployeeController extends Controller
@@ -54,98 +56,92 @@ class EmployeeController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
-            'name'               => 'required|string',
-            'code'               => 'required',
-            'mobile_dail_code'   => 'required',
-            'office_dail_code'   => 'required',
-            'whatsapp_dail_code' => 'required',
-            'mobile'             => 'required',
-            'office'             => 'required',
-            'whatsapp'           => 'required',
-            'extension_no'       => 'required',
-            'department_id'      => 'required',
-            'employee_type_id'   => 'required',
+            'name'                  => 'required|string',
+            'username'              => 'required|unique:users,username',
+            'email'                 => 'nullable|unique:users,email',
+            'password'              => 'required|min:5',
+            'role_id'               => 'required',
+
 
         ]);
-        $employee = DB::table('employees')->insert([
-            'name'               => $request->name,
-            'code'               => $request->code,
-            'email'              => $request->email,
-            'username'           => $request->username,
-            'myname'             => $request->password,
-            'password'           => Hash::make($request->password),
-            'status'             => $request->status,
-            'mobile_dail_code'   => $request->mobile_dail_code,
-            'office_dail_code'   => $request->office_dail_code,
-            'whatsapp_dail_code' => $request->whatsapp_dail_code,
-            'mobile'             => $request->mobile,
-            'office'             => $request->office,
-            'whatsapp'           => $request->whatsapp,
-            'extension_no'       => $request->extension_no,
-            'department_id'      => $request->department_id,
-            'employee_type_id'   => $request->employee_type_id,
-
-        ]);
-        Toastr::success('added_successfully');
-
-        return to_route('employee.index')->with('success', translate('added_successfully'));
+        try {
+            $employee = DB::table('users')->insert([
+                'name'               => $request->name,
+                'username'           => $request->username,
+                'role_id'            => $request->role_id,
+                'password'           => Hash::make($request->password),
+                'email'              => $request->email,
+                'phone'              => $request->phone,
+                'my_name'             => $request->password,
+                'team_id'            => $request->team_id,
+                'created_at'         => now(),
+            ]);
+            Toastr::success(translate('added_successfully'));
+            return to_route('employee.index')->with('success', translate('added_successfully'));
+        } catch (Exception $ex) {
+            return back()->with('error', $ex->getMessage())->withInput();
+        }
     }
     public function create()
     {
         $departments    = Team::get();
-
+        $roles          = AdminRole::get();
         $data = [
-            "departments"    => $departments,
+            "departments"       => $departments,
+            "roles"             => $roles,
         ];
         return view("admin-views.team.employee.create", $data);
     }
     public function edit($id)
     {
 
-        $employee       = DB::table('employees')->find($id);
-        $departments    = DB::table('departments')->get();
-        $employee_types = DB::table('employee_types')->get();
+        $employee       = User::findOrFail($id);
+        $departments    = Team::get();
+        $roles          = AdminRole::get();
 
         $data = [
-            "departments"    => $departments,
-            'employee_types' => $employee_types,
-            'employee'       => $employee,
-            'department'     => 'no',
-
+            "departments"           => $departments,
+            "roles"                 => $roles,
+            "employee"              => $employee,
         ];
         return view("admin-views.team.employee.edit", $data);
     }
     public function update(Request $request, $id)
     {
-        $old_employee = DB::table('employees')->where('id', $id)->first();
-        DB::table('employees')
-            ->where('id', $id)
-            ->update([
-                'name'               => (isset($request->name) && ! empty($request->name)) ? $request->name : $old_employee->name,
-                'code'               => (isset($request->code) && ! empty($request->code)) ? $request->code : $old_employee->code,
-                'username'           => (isset($request->username) && ! empty($request->username)) ? $request->username : $old_employee->username,
-                'email'              => (isset($request->email) && ! empty($request->email)) ? $request->email : $old_employee->email,
-                'myname'             => (isset($request->password) && ! empty($request->password)) ? $request->password : $old_employee->myname,
-                'password'           => $request->filled('password') ? Hash::make($request->password) : $old_employee->password,
-                'status'             => (isset($request->status) && ! empty($request->status)) ? $request->status : $old_employee->status,
-                'mobile_dail_code'   => (isset($request->mobile_dail_code) && ! empty($request->mobile_dail_code)) ? $request->mobile_dail_code : $old_employee->mobile_dail_code,
-                'office_dail_code'   => (isset($request->office_dail_code) && ! empty($request->office_dail_code)) ? $request->office_dail_code : $old_employee->office_dail_code,
-                'whatsapp_dail_code' => (isset($request->whatsapp_dail_code) && ! empty($request->whatsapp_dail_code)) ? $request->whatsapp_dail_code : $old_employee->whatsapp_dail_code,
-                'mobile'             => (isset($request->mobile) && ! empty($request->mobile)) ? $request->mobile : $old_employee->mobile,
-                'office'             => (isset($request->office) && ! empty($request->office)) ? $request->office : $old_employee->office,
-                'whatsapp'           => (isset($request->whatsapp) && ! empty($request->whatsapp)) ? $request->whatsapp : $old_employee->whatsapp,
-                'extension_no'       => (isset($request->extension_no) && ! empty($request->extension_no)) ? $request->extension_no : $old_employee->extension_no,
-                'department_id'      => (isset($request->department_id) && ! empty($request->department_id)) ? $request->department_id : $old_employee->department_id,
-                'employee_type_id'   => (isset($request->employee_type_id) && ! empty($request->employee_type_id)) ? $request->employee_type_id : $old_employee->employee_type_id,
-            ]);
-        Toastr::success('updated_successfully');
+        $employee = User::findOrFail($id);
+        $request->validate([
+            'name'                  => 'required|string',
+            'username'              => 'required',
+            'email'                 => 'nullable|unique:users,email',
+            'password'              => 'required|min:5',
+            'role_id'               => 'required',
 
-        return to_route('employee.index')->with('success', translate('added_successfully'));
+
+        ]);
+        try {
+            $employee->update([
+                'name'               => $request->name,
+                'username'           => $request->username,
+                'role_id'            => $request->role_id,
+                'password'           => Hash::make($request->password),
+                'email'              => $request->email,
+                'phone'              => $request->phone,
+                'my_name'            => $request->password,
+                'team_id'            => $request->team_id,
+                'created_at'         => now(),
+            ]);
+        Toastr::success(translate('updated_successfully'));
+            return to_route('employee.index')->with('success', translate('updated_successfully'));
+        } catch (Exception $ex) {
+            return back()->with('error', $ex->getMessage())->withInput();
+        }
+ 
     }
     public function delete(Request $request)
     {
-        $employee = Employee::find($request->id);
+        $employee = User::find($request->id);
         if ($employee) {
             $employee->delete();
         }
@@ -160,7 +156,7 @@ class EmployeeController extends Controller
             'status' => ($request->status == 1) ? '1' : '0',
         ]);
         Toastr::success(translate('status_changed_successfully'));
-        
+
         return redirect()->back()->with('success', translate('updated_successfully'));
     }
 }
