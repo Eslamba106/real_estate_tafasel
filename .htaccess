@@ -4,7 +4,7 @@
     </IfModule>
 
     RewriteEngine On
-    RewriteBase /https://dev.y-codex.org/
+    RewriteBase /
 
     # Redirect Trailing Slashes...
     RewriteCond %{REQUEST_FILENAME} !-d
