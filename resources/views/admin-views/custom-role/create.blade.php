@@ -838,6 +838,122 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="section-card   col-4 col-md-6 col-lg-4 mt-3">
+                            <div class="card card-primary section-box">
+                                <div class="card-header">
+                                    <input type="checkbox" name="modules[]" id="customer" value="customer"
+                                        class="form-check-input mt-0 section-parent module-permission">
+                                    <label
+                                        class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                        for="customer">
+                                        {{ translate('customer') }}
+                                    </label>
+                                </div>
+
+                                <div class="card-body">
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="show_all_customer"
+                                            value="show_all_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="show_all_customer">
+                                            {{ translate('show_all_customers') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="add_customer"
+                                            value="add_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="add_customer">
+                                            {{ translate('add_customer') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="edit_customer"
+                                            value="edit_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="edit_customer">
+                                            {{ translate('edit_customer') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="delete_customer"
+                                            value="delete_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="delete_customer">
+                                            {{ translate('delete_customer') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="assign_to"
+                                            value="assign_to"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="assign_to">
+                                            {{ translate('assign_to') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="add_reminder"
+                                            value="add_reminder"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="add_reminder">
+                                            {{ translate('add_reminder') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="change_status_customer"
+                                            value="change_status_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="change_status_customer">
+                                            {{ translate('change_status_customer') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="accept_installment"
+                                            value="accept_installment"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="accept_installment">
+                                            {{ translate('accept_installment') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="installments_customer"
+                                            value="installments_customer"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="installments_customer">
+                                            {{ translate('installments_customer') }}
+                                        </label>
+                                    </div>
+                                    <div class="form-check mt-1">
+                                        <input type="checkbox" name="modules[]" id="all_installments"
+                                            value="all_installments"
+                                            class="form-check-input section-child module-permission">
+                                        <label
+                                            class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
+                                            for="all_installments">
+                                            {{ translate('all_installments_for_admin') }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
 
 

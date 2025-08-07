@@ -9,9 +9,13 @@ class CustomerLog extends Model
     use HasFactory;
     protected $guarded  = [ ];
 
-    public function employee()
+    public function main_user()
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+    public function employee()
+    {
+        return $this->belongsTo(User::class, 'employee_id');
     }
     public function customer()
     {

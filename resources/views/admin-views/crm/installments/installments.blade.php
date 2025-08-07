@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', translate('all_floor_management'))
+@section('title', translate('all_installments'))
 
 @push('css_or_js')
 @endpush
@@ -10,13 +10,13 @@
         <!-- Page Title -->
         <div class="mb-3">
             <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-                {{ translate('all_floor_management') }}
-                <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $floor_management->total() }}</span>
+                <img src="{{ asset(main_path() . 'back-end/img/inhouse-customer_item-list.png') }}" alt="">
+                {{ translate('all_installments') }}
+                <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $installments->total() }}</span>
             </h2>
         </div>
         <!-- End Page Title -->
-        @include('admin-views.inline_menu.property_config.inline-menu')
-
+        @include('admin-views.inline_menu.team_master.inline-menu')
 
         <div class="row mt-20">
             <div class="col-md-12">
@@ -41,15 +41,7 @@
                                 </form>
                                 <!-- End Search -->
                             </div>
-                            <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
-
-                                @if (\App\Helpers\Helpers::module_permission_check('add_floor_management'))
-                                    <a href="{{ route('floor_management.create') }}" class="btn btn--primary">
-                                        <i class="tio-add"></i>
-                                        <span class="text">{{ translate('create_floor_management') }}</span>
-                                    </a>
-                                @endif
-                            </div>
+                            
                         </div>
                     </div>
 
@@ -59,61 +51,48 @@
                             <thead class="thead-light thead-50 text-capitalize">
                                 <tr>
                                     <th>{{ translate('sl') }}</th>
-                                    <th class="text-right">{{ translate('project') }}</th>
-                                    <th class="text-right">{{ translate('floor') }}</th>
-                                    @if (\App\Helpers\Helpers::module_permission_check('change_status_floor_management'))
-                                        <th class="text-center">{{ translate('status') }}</th>
-                                    @endif
-                                    <th class="text-center">{{ translate('Actions') }}</th>
+                                    <th class="text-right">{{ translate('name') }}</th>
+                                    <th class="text-right">{{ translate('date') }}</th>
+                                    <th class="text-right">{{ translate('value') }}</th>
+                                    <th class="text-right">{{ translate('status') }}</th>
+                                    <th class="text-right">{{ translate('remarks') }}</th>
+                                    <th class="text-right">{{ translate('actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($floor_management as $k => $floor_management_item)
+                                @foreach ($installments as $k => $installment_item)
                                     <tr>
-                                        <th scope="row">{{ $floor_management->firstItem() + $k }}</th>
+                                        <th scope="row">{{ $installments->firstItem() + $k }}</th>
 
                                         <td class="text-right">
-                                            {{ $floor_management_item->project_floor?->name }}
+                                            {{ \Illuminate\Support\Str::limit($installment_item->customer?->name, 20) }}
+
+                                        </td>
+
+
+                                        <td class="text-right">
+                                            {{ $installment_item->date ?? translate('not_available') }}
                                         </td>
                                         <td class="text-right">
-                                            {{ $floor_management_item->floor_main?->name }}
+                                            {{ $installment_item->value ?? translate('not_available') }}
                                         </td>
-                                        @if (\App\Helpers\Helpers::module_permission_check('change_status_floor_management'))
-                                            <td class="text-center">
-                                                <form action="{{ route('floor_management.status-update') }}" method="post"
-                                                    id="subscription_status{{ $floor_management_item->id }}_form"
-                                                    class="subscription_status_form">
-                                                    @csrf
-                                                    <input type="hidden" name="id"
-                                                        value="{{ $floor_management_item->id }}">
-                                                    <label class="switcher mx-auto">
-                                                        <input type="checkbox" class="switcher_input"
-                                                            id="subscription_status{{ $floor_management_item->id }}"
-                                                            name="status" value="1"
-                                                            {{ $floor_management_item->status == 'active' ? 'checked' : '' }}
-                                                            onclick="toogleStatusModal(event,'subscription_status{{ $floor_management_item->id }}',
-                                                'subscription-status-on.png','subscription-status-off.png',
-                                                '{{ translate('Want_to_Turn_ON') }} {{ $floor_management_item->name }} ',
-                                                '{{ translate('Want_to_Turn_OFF') }} {{ $floor_management_item->name }} ',
-                                                `<p>{{ translate('if_enabled_this_subscription_will_be_available') }}</p>`,
-                                                `<p>{{ translate('if_disabled_this_subscription_will_be_hidden') }}</p>`)">
-                                                        <span class="switcher_control"></span>
-                                                    </label>
-                                                </form>
-                                            </td>
-                                        @endif
+                                        <td class="text-right">
+                                            {{ isset($installment_item->status) ? translate('paid') : translate('not_paid') }}
+                                        </td>
+                                        <td class="text-right">
+                                            {{ $installment_item->notes ?? translate('not_available') }}
+                                        </td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
-                                                @if (\App\Helpers\Helpers::module_permission_check('edit_floor_management'))
+
+                                                @if (\App\Helpers\Helpers::module_permission_check('accept_installment') && !isset($installment_item->status))
                                                     <a class="btn btn-outline--primary btn-sm square-btn"
-                                                        title="{{ translate('edit') }}"
-                                                        href="{{ route('floor_management.edit', [$floor_management_item->id]) }}">
-                                                        <i class="tio-edit"></i>
+                                                        title="{{ translate('accept_installment') }}"
+                                                        href="{{ route('customer.accept_installment', [$installment_item->id]) }}">
+                                                        <i class="tio-add"></i>
                                                     </a>
                                                 @endif
                                             </div>
-
-
                                         </td>
                                     </tr>
                                 @endforeach
@@ -124,11 +103,11 @@
                     <div class="table-responsive mt-4">
                         <div class="px-4 d-flex justify-content-lg-end">
                             <!-- Pagination -->
-                            {{ $floor_management->links() }}
+                            {{ $installments->links() }}
                         </div>
                     </div>
 
-                    @if (count($floor_management) == 0)
+                    @if (count($installments) == 0)
                         <div class="text-center p-4">
                             <img class="mb-3 w-160"
                                 src="{{ asset(main_path() . 'assets/back-end') }}/svg/illustrations/sorry.svg"
@@ -140,6 +119,8 @@
             </div>
         </div>
     </div>
+
+
 @endsection
 
 @push('script')
@@ -153,7 +134,7 @@
             $('#dataTable').DataTable();
         });
 
-        $('.subscription_status_form').on('submit', function(event) {
+        $('.customer_item_status_form').on('submit', function(event) {
             event.preventDefault();
 
             $.ajaxSetup({
@@ -162,7 +143,7 @@
                 }
             });
             $.ajax({
-                url: "{{ route('floor_management.status-update') }}",
+                url: "{{ route('customer.status-update') }}",
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function(data) {
@@ -200,7 +181,7 @@
                         }
                     });
                     $.ajax({
-                        url: "{{ route('floor_management.delete') }}",
+                        url: "{{ route('customer.delete') }}",
                         method: 'get',
                         data: {
                             id: id
@@ -213,5 +194,50 @@
                 }
             })
         });
+    </script>
+
+    <script>
+        $(document).on('click', '#add_action', function() {
+            var customerId = $(this).data('id');
+            $('input[name="customer_id_add_action"]').val(customerId);
+        });
+        $(document).on('click', '#reminder', function() {
+            var customerId = $(this).data('id');
+            $('input[name="customer_id"]').val(customerId);
+        });
+        $(document).on('click', '#assign_to_employee', function() {
+            var customerId = $(this).data('id');
+            $('input[name="customer_id_assign_to"]').val(customerId);
+        });
+    </script>
+
+    <script>
+        function employee(element) {
+            var id = element.value;
+
+            $.ajax({
+                url: "{{ route('customer.get_employee_by_team_id', ':id') }}".replace(':id', id),
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    var Select = $("select[name='employee_id']");
+                    Select.empty();
+                    Select.append('<option value="">{{ translate('select_employee') }}</option>');
+                    console.installment(data)
+                    if (data.employees && Array.isArray(data.employees) && data.employees.length > 0) {
+                        data.employees.forEach(function(employee) {
+                            Select.append(
+                                `<option value="${employee.id}">${employee.name}</option>`
+                            );
+                        });
+                    } else {
+                        console.warn("No employee returned.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching employee :', error);
+                }
+            });
+        }
     </script>
 @endpush

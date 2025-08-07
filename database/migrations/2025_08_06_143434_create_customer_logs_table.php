@@ -16,9 +16,13 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->date('date')->nullable();
             $table->time('time')->nullable();
-            $table->string('activity'); 
+            $table->string('activity')->nullable(); 
+            $table->string('unit_price')->nullable(); 
+            $table->string('deposite')->nullable(); 
+            $table->date('quarterly_installments_start_from_the_date')->nullable();  
             $table->text('notes')->nullable();
             $table->tinyInteger('user_id')->nullable(); 
+            $table->tinyInteger('employee_id')->nullable(); 
             $table->timestamps();
         });
     }

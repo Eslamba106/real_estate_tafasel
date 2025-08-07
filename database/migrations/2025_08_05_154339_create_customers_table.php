@@ -22,9 +22,11 @@ return new class extends Migration
             $table->integer('project_id')->nullable();
             $table->integer('floor_id')->nullable(); 
             $table->integer('added_by')->nullable(); 
+            $table->integer('assign_to_team')->nullable(); 
             $table->integer('assign_to')->nullable(); 
             $table->date('assign_date')->nullable(); 
             $table->integer('status')->default(1);
+            $table->enum('booking_status', ['empty', 'request', 'review', 'meeting', 'booking', 'agreement'])->default('empty');
             $table->timestamps();
         });
     }

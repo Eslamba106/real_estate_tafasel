@@ -17,8 +17,10 @@
                 {{-- <img width="60" src="{{ asset('/assets/back-end/img/property.jpg') }}" alt=""> --}}
                 {{ translate('project') }}
             </h2>
+            @if (\App\Helpers\Helpers::module_permission_check('add_project')) 
             <a href="{{ route('project.create') }}"
                 class="btn btn--primary">{{ translate('add_new_project') }}</a>
+                @endif
         </div>
         <!-- End Page Title -->
         @include('admin-views.inline_menu.property_config.inline-menu')

@@ -44,6 +44,7 @@
 
         <!-- Content Row -->
         <div class="row">
+            @if (\App\Helpers\Helpers::module_permission_check('show_all_'.$route))
             <div class="col-md-12 mb-3">
                 <div class="card">
                     <div class="card-header">
@@ -90,7 +91,7 @@
                     </div>
                 </div>
             </div>
-
+            @endif
             <div class="col-md-12">
                 <div class="card">
                     <div class="px-3 py-4">
@@ -130,7 +131,9 @@
                                         <th class="text-center">{{ translate($route . '_name') }} </th>
 
                                         @if ($route != 'team')
+                                        @if (\App\Helpers\Helpers::module_permission_check('change_status_'.$route))
                                             <th class="text-center">{{ translate('status') }}</th>
+                                            @endif
                                         @endif
                                         <th class="text-center">{{ translate('actions') }}</th>
                                     </tr>
@@ -141,6 +144,7 @@
                                             <td>{{ $main->firstItem() + $key }}</td>
                                             <td class="text-center">{{ $value->name }}</td>
                                             @if ($route != 'team')
+                                            @if (\App\Helpers\Helpers::module_permission_check('change_status_'.$route))
                                                 <td class="text-center">
                                                     <form action="{{ route($route . '.status-update') }}" method="post"
                                                         id="product_status{{ $value->id }}_form"
@@ -162,6 +166,7 @@
                                                         </label>
                                                     </form>
                                                 </td>
+                                            @endif
                                             @endif
                                             <td>
                                                 <div class="d-flex justify-content-center gap-2">

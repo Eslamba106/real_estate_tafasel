@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Helpers;
 
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 
 class Helpers
@@ -57,7 +55,9 @@ class Helpers
     public static function module_permission_check($mod_name)
     {
         if (auth()->check()) {
-            $user_role = auth()->user()->role;
+            $user_role  = auth()->user()->role;
+            $permission = $user_role->module_access;
+
             if (auth()->user()->role_id == 1) {
                 return true;
             }
@@ -106,9 +106,9 @@ class Helpers
     {
         return str_ireplace(['\'', '"', ',', ';', '<', '>', '?'], ' ', preg_replace('/\s\s+/', ' ', $str));
     }
- 
+
 }
-if (!function_exists('getLanguageCode')) {
+if (! function_exists('getLanguageCode')) {
     function getLanguageCode(string $country_code): string
     {
         $locales = [
@@ -259,7 +259,7 @@ if (!function_exists('getLanguageCode')) {
             'zh-HK',
             'zh-MO',
             'zh-SG',
-            'zh-TW'
+            'zh-TW',
         ];
 
         foreach ($locales as $locale) {
@@ -272,8 +272,8 @@ if (!function_exists('getLanguageCode')) {
         return "en";
     }
 }
-if (!function_exists('auto_translator')) {
-   function auto_translator($q, $sl, $tl)
+if (! function_exists('auto_translator')) {
+    function auto_translator($q, $sl, $tl)
     {
         $res = file_get_contents("https://translate.googleapis.com/translate_a/single?client=gtx&ie=UTF-8&oe=UTF-8&dt=bd&dt=ex&dt=ld&dt=md&dt=qca&dt=rw&dt=rm&dt=ss&dt=t&dt=at&sl=" . $sl . "&tl=" . $tl . "&hl=hl&q=" . urlencode($q), $_SERVER['DOCUMENT_ROOT'] . "/transes.html");
         $res = json_decode($res);
