@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\UnitManagementController;
 use App\Http\Controllers\FloorManagementController;
+use App\Http\Controllers\CustomerReminderController;
 use App\Http\Controllers\property_master\ViewController;
 use App\Http\Controllers\property_master\FloorController;
 use App\Http\Controllers\property_master\UnitTypeController;
@@ -106,49 +108,49 @@ Route::group(['prefix' => 'property_type'], function () {
 });
 // floors
 Route::group(['prefix' => 'floor'], function () {
-    Route::get('/', [FloorController::class, 'index'])->name('floor.index');
-    Route::post('store', [FloorController::class, 'store'])->name('floor.store');
-    Route::get('/edit/{id}', [FloorController::class, 'edit'])->name('floor.edit');
-    Route::patch('/update/{id}', [FloorController::class, 'update'])->name('floor.update');
-    Route::get('delete', [FloorController::class, 'delete'])->name('floor.delete');
-    Route::post('/status-update', [FloorController::class, 'statusUpdate'])->name('floor.status-update');
+    Route::get('/', [FloorController::class, 'index'])->name('floor.index')->middleware('module:show_all_floor');
+    Route::post('store', [FloorController::class, 'store'])->name('floor.store')->middleware('module:add_floor');
+    Route::get('/edit/{id}', [FloorController::class, 'edit'])->name('floor.edit')->middleware('module:edit_floor');
+    Route::patch('/update/{id}', [FloorController::class, 'update'])->name('floor.update')->middleware('module:edit_floor');
+    Route::get('delete', [FloorController::class, 'delete'])->name('floor.delete')->middleware('module:delete_floor');
+    Route::post('/status-update', [FloorController::class, 'statusUpdate'])->name('floor.status-update')->middleware('module:change_status_floor');
 });
 
 // Project 
 Route::group(['prefix' => 'project'], function () {
-    Route::get('/', [ProjectController::class, 'index'])->name('project.index');
-    Route::get('/create', [ProjectController::class, 'create'])->name('project.create');
-    Route::post('store', [ProjectController::class, 'store'])->name('project.store');
-    Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('project.edit');
+    Route::get('/', [ProjectController::class, 'index'])->name('project.index')->middleware('module:show_all_project');
+    Route::get('/create', [ProjectController::class, 'create'])->name('project.create')->middleware('module:add_project');
+    Route::post('store', [ProjectController::class, 'store'])->name('project.store')->middleware('module:add_project');
+    Route::get('/edit/{id}', [ProjectController::class, 'edit'])->name('project.edit')->middleware('module:edit_project');
     // Route::get('/show/{id}', [ProjectController::class, 'show'])->name('project.show');
-    Route::get('/view_image/{id}', [ProjectController::class, 'view_image'])->name('project.show');
-    Route::patch('/update/{id}', [ProjectController::class, 'update'])->name('project.update');
-    Route::get('delete', [ProjectController::class, 'delete'])->name('project.delete');
+    Route::get('/view_image/{id}', [ProjectController::class, 'view_image'])->name('project.show')->middleware('module:show_project');
+    Route::patch('/update/{id}', [ProjectController::class, 'update'])->name('project.update')->middleware('module:edit_project');
+    Route::get('delete', [ProjectController::class, 'delete'])->name('project.delete')->middleware('module:delete_project');
 });
 
 Route::group(['prefix' => 'floor_management'], function () {
-    Route::get('/', [FloorManagementController::class, 'index'])->name('floor_management.index');
-    Route::get('/create', [FloorManagementController::class, 'create'])->name('floor_management.create');
-    Route::post('store', [FloorManagementController::class, 'store'])->name('floor_management.store');
-    Route::get('/edit/{id}', [FloorManagementController::class, 'edit'])->name('floor_management.edit');
+    Route::get('/', [FloorManagementController::class, 'index'])->name('floor_management.index')->middleware('module:show_all_floor_management');
+    Route::get('/create', [FloorManagementController::class, 'create'])->name('floor_management.create')->middleware('module:add_floor_management');
+    Route::post('store', [FloorManagementController::class, 'store'])->name('floor_management.store')->middleware('module:add_floor_management');
+    Route::get('/edit/{id}', [FloorManagementController::class, 'edit'])->name('floor_management.edit')->middleware('module:edit_floor_management');
     // Route::get('/show/{id}', [FloorManagementController::class, 'show'])->name('floor_management.show');
-    Route::get('/view_image/{id}', [FloorManagementController::class, 'view_image'])->name('floor_management.show');
-    Route::patch('/update/{id}', [FloorManagementController::class, 'update'])->name('floor_management.update');
-    Route::get('delete', [FloorManagementController::class, 'delete'])->name('floor_management.delete');
-    Route::post('status-update', [FloorManagementController::class, 'statusUpdate'])->name('floor_management.status-update');
+    Route::get('/view_image/{id}', [FloorManagementController::class, 'view_image'])->name('floor_management.show')->middleware('module:edit_floor_management');
+    Route::patch('/update/{id}', [FloorManagementController::class, 'update'])->name('floor_management.update')->middleware('module:edit_floor_management');
+    Route::get('delete', [FloorManagementController::class, 'delete'])->name('floor_management.delete')->middleware('module:delete_floor_management');
+    Route::post('status-update', [FloorManagementController::class, 'statusUpdate'])->name('floor_management.status-update')->middleware('module:change_status_floor_management');
 });
 
 // Units Management
 Route::group(['prefix' => 'unit_management'], function () {
-    Route::get('/', [UnitManagementController::class, 'index'])->name('unit_management.index');
-    Route::get('/create', [UnitManagementController::class, 'create'])->name('unit_management.create');
-    Route::post('store', [UnitManagementController::class, 'store'])->name('unit_management.store');
-    Route::get('/edit/{id}', [UnitManagementController::class, 'edit'])->name('unit_management.edit');
+    Route::get('/', [UnitManagementController::class, 'index'])->name('unit_management.index')->middleware('module:show_all_unit_management');
+    Route::get('/create', [UnitManagementController::class, 'create'])->name('unit_management.create')->middleware('module:add_unit_management');
+    Route::post('store', [UnitManagementController::class, 'store'])->name('unit_management.store')->middleware('module:add_unit_management');
+    Route::get('/edit/{id}', [UnitManagementController::class, 'edit'])->name('unit_management.edit')->middleware('module:edit_unit_management');
     // Route::get('/show/{id}', [UnitManagementController::class, 'show'])->name('unit_management.show');
-    Route::get('/view_image/{id}', [UnitManagementController::class, 'view_image'])->name('unit_management.show');
-    Route::patch('/update/{id}', [UnitManagementController::class, 'update'])->name('unit_management.update');
-    Route::get('delete', [UnitManagementController::class, 'delete'])->name('unit_management.delete');
-    Route::post('status-update', [UnitManagementController::class, 'statusUpdate'])->name('unit_management.status-update');
+    Route::get('/view_image/{id}', [UnitManagementController::class, 'view_image'])->name('unit_management.show')->middleware('module:edit_unit_management');
+    Route::patch('/update/{id}', [UnitManagementController::class, 'update'])->name('unit_management.update')->middleware('module:edit_unit_management');
+    Route::get('delete', [UnitManagementController::class, 'delete'])->name('unit_management.delete')->middleware('module:delete_unit_management');
+    Route::post('status-update', [UnitManagementController::class, 'statusUpdate'])->name('unit_management.status-update')->middleware('module:change_status_unit_management');
 
     Route::get('get_blocks_by_property_id/{id}', [UnitManagementController::class, 'get_blocks_by_property_id'])->name('unit_management.get_blocks_by_property_id');
     Route::get('get_floors_by_block_id/{id}', [UnitManagementController::class, 'get_floors_by_block_id'])->name('unit_management.get_floors_by_block_id');
@@ -159,24 +161,44 @@ Route::group(['prefix' => 'unit_management'], function () {
 
 
 // Teams
-Route::group(['prefix' => 'team', 'middleware' => ['module:team', 'auth']], function () {
-    Route::get('/', [TeamController::class, 'index'])->name('team.index');
-    Route::post('store', [TeamController::class, 'store'])->name('team.store');
-    Route::get('/edit/{id}', [TeamController::class, 'edit'])->name('team.edit');
-    Route::patch('/update/{id}', [TeamController::class, 'update'])->name('team.update');
-    Route::get('delete', [TeamController::class, 'delete'])->name('team.delete');
-    Route::post('/status-update', [TeamController::class, 'statusUpdate'])->name('team.status-update');
+Route::group(['prefix' => 'team' ], function () {
+    Route::get('/', [TeamController::class, 'index'])->name('team.index')->middleware('module:show_all_team');
+    Route::post('store', [TeamController::class, 'store'])->name('team.store')->middleware('module:add_team');
+    Route::get('/edit/{id}', [TeamController::class, 'edit'])->name('team.edit')->middleware('module:edit_team');
+    Route::patch('/update/{id}', [TeamController::class, 'update'])->name('team.update')->middleware('module:edit_team');
+    Route::get('delete', [TeamController::class, 'delete'])->name('team.delete')->middleware('module:delete_team');
+    Route::post('/status-update', [TeamController::class, 'statusUpdate'])->name('team.status-update')->middleware('module:change_status_team');
 });
 
  
 // Employee
 Route::group(['prefix' => 'employees'], function () {
-    Route::get('/', [EmployeeController::class, 'index'])->name('employee.index');
-    Route::get('/create', [EmployeeController::class, 'create'])->name('employee.create');
-    Route::post('store', [EmployeeController::class, 'store'])->name('employee.store');
-    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employee.edit');
-    Route::patch('/update/{id}', [EmployeeController::class, 'update'])->name('employee.update');
-    Route::get('delete', [EmployeeController::class, 'delete'])->name('employee.delete');
-    Route::post('/status-update', [EmployeeController::class, 'statusUpdate'])->name('employee.status-update');
+    Route::get('/', [EmployeeController::class, 'index'])->name('employee.index')->middleware('module:show_all_employee');
+    Route::get('/create', [EmployeeController::class, 'create'])->name('employee.create')->middleware('module:add_employee');
+    Route::post('store', [EmployeeController::class, 'store'])->name('employee.store')->middleware('module:add_employee');
+    Route::get('/edit/{id}', [EmployeeController::class, 'edit'])->name('employee.edit')->middleware('module:edit_employee');
+    Route::patch('/update/{id}', [EmployeeController::class, 'update'])->name('employee.update')->middleware('module:edit_employee');
+    Route::get('delete', [EmployeeController::class, 'delete'])->name('employee.delete')->middleware('module:delete_employee');
+    Route::post('/status-update', [EmployeeController::class, 'statusUpdate'])->name('employee.status-update')->middleware('module:change_status_employee');
 
+});
+ 
+// Customer
+Route::group(['prefix' => 'customers'], function () {
+    Route::get('/', [CustomerController::class, 'index'])->name('customer.index')->middleware('module:customer');
+    Route::get('/create', [CustomerController::class, 'create'])->name('customer.create')->middleware('module:add_customer');
+    Route::post('store', [CustomerController::class, 'store'])->name('customer.store')->middleware('module:add_customer');
+    Route::get('/edit/{id}', [CustomerController::class, 'edit'])->name('customer.edit')->middleware('module:edit_customer');
+    Route::patch('/update/{id}', [CustomerController::class, 'update'])->name('customer.update')->middleware('module:edit_customer');
+    Route::get('delete', [CustomerController::class, 'delete'])->name('customer.delete')->middleware('module:delete_customer');
+    Route::post('/status-update', [CustomerController::class, 'statusUpdate'])->name('customer.status-update')->middleware('module:change_status_delete_customer');
+    Route::post('/store_reminder', [CustomerReminderController::class, 'add_reminder'])->name('customer.store_reminder')->middleware('module:add_reminder');
+    // Route::get('/add_reminder', [CustomerController::class, 'add_reminder'])->name('customer.add_reminder')->middleware('module:add_reminder');
+    Route::get('get_floors_by_project/{id}', [CustomerController::class, 'get_floors_by_project'])->name('customer.get_floors_by_project') ;
+    Route::get('get_unit_by_floor/{id}', [CustomerController::class, 'get_unit_by_floor'])->name('customer.get_unit_by_floor') ;
+
+});
+    Route::middleware(['auth'])->group(function () {
+    Route::get('/reminders', [CustomerReminderController::class, 'index'])->name('reminders.index');
+    Route::post('/reminder/{id}/done', [CustomerReminderController::class, 'markAsDone'])->name('reminders.done');
 });

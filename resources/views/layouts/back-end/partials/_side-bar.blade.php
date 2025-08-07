@@ -279,6 +279,17 @@
                                             </a>
                                         </li>
                                     @endif
+                                    @if (\App\Helpers\Helpers::module_permission_check('customers'))
+                                        <li class="nav-item {{ Request::is('customers/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('customer.index') }}"
+                                                title="{{ translate('customers') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('customers') }}
+                                                </span>
+                                            </a>
+                                        </li>
+                                    @endif
                                     @if (\App\Helpers\Helpers::module_permission_check('roles'))
                                         <li class="nav-item {{ Request::is('roles/*') ? 'active' : '' }}">
                                             <a class="nav-link" href="{{ route('role_admin.role_list') }}"
@@ -295,7 +306,16 @@
                             </li>
                             <li class="nav-item pt-5">
                             </li>
-                        @endif
+                        @endif 
+                            <li class="nav-item {{ Request::is('reminders/*') ? 'active' : '' }}">
+                                            <a class="nav-link" href="{{ route('reminders.index') }}"
+                                                title="{{ translate('My_Reminders') }}">
+                                                <span class="tio-circle nav-indicator-icon"></span>
+                                                <span class="text-truncate">
+                                                    {{ translate('My_Reminders') }}
+                                                </span>
+                                            </a>
+                                        </li>
                         @if (\App\Helpers\Helpers::module_permission_check('theme_settings'))
                             <li
                                 class="navbar-vertical-aside-has-menu {{ Request::is('theme_settings/*') || Request::is('unit_management/*') || Request::is('floor_management/*')

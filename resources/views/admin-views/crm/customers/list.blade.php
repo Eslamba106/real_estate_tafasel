@@ -1,6 +1,6 @@
 @extends('layouts.back-end.app')
 
-@section('title', translate('all_employees'))
+@section('title', translate('all_customers'))
 
 @push('css_or_js')
 @endpush
@@ -10,8 +10,8 @@
         <!-- Page Title -->
         <div class="mb-3">
             <h2 class="h1 mb-0 text-capitalize d-flex gap-2">
-                <img src="{{ asset(main_path() . 'back-end/img/inhouse-employee_item-list.png') }}" alt="">
-                {{ translate('all_employees') }}
+                <img src="{{ asset(main_path() . 'back-end/img/inhouse-customer_item-list.png') }}" alt="">
+                {{ translate('all_customers') }}
                 <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $main->total() }}</span>
             </h2>
         </div>
@@ -42,13 +42,12 @@
                                 <!-- End Search -->
                             </div>
                             <div class="col-lg-8 mt-3 mt-lg-0 d-flex flex-wrap gap-3 justify-content-lg-end">
-                                @if (\App\Helpers\Helpers::module_permission_check('add_employee'))
 
-
-                                <a href="{{ route('employee.create') }}" class="btn btn--primary">
-                                    <i class="tio-add"></i>
-                                    <span class="text">{{ translate('create_employee') }}</span>
-                                </a>
+                                @if (\App\Helpers\Helpers::module_permission_check('add_customer'))
+                                    <a href="{{ route('customer.create') }}" class="btn btn--primary">
+                                        <i class="tio-add"></i>
+                                        <span class="text">{{ translate('create_customer') }}</span>
+                                    </a>
                                 @endif
                             </div>
                         </div>
@@ -62,50 +61,51 @@
                                     <th>{{ translate('sl') }}</th>
                                     <th class="text-right">{{ translate('name') }}</th>
                                     <th class="text-right">{{ translate('mobile') }}</th>
-                                    <th class="text-right">{{ translate('email') }}</th>
-                                    <th class="text-right">{{ translate('role') }}</th>
+                                    <th class="text-right">{{ translate('email') }}</th> 
+                                    @if (\App\Helpers\Helpers::module_permission_check('change_status_customer'))
                                     <th class="text-center">{{ translate('status') }}</th>
+                                    @endif
                                     <th class="text-center">{{ translate('Actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($main as $k => $employee_item)
+                                @foreach ($main as $k => $customer_item)
                                     <tr>
                                         <th scope="row">{{ $main->firstItem() + $k }}</th>
 
-                                        <td  class="text-right"> 
-                                            {{ \Illuminate\Support\Str::limit($employee_item->name, 20) }}
+                                        <td class="text-right">
+                                            {{ \Illuminate\Support\Str::limit($customer_item->name, 20) }}
 
                                         </td>
 
 
                                         <td class="text-right">
-                                            {{ $employee_item->phone ?? translate('not_available') }}
+                                            {{ $customer_item->phone ?? translate('not_available') }}
                                         </td>
                                         <td class="text-right">
-                                            {{ $employee_item->email ?? translate('not_available') }}
+                                            {{ $customer_item->email ?? translate('not_available') }}
                                         </td>
                                         <td class="text-right">
-                                            {{ $employee_item->role?->name ?? translate('not_available') }}
+                                            {{ $customer_item->role?->name ?? translate('not_available') }}
                                         </td>
-                                        @if (\App\Helpers\Helpers::module_permission_check('change_employee_status'))
+                                        @if (\App\Helpers\Helpers::module_permission_check('change_status_customer'))
                                             <td class="text-center">
-                                                <form action="{{ route('employee.status-update') }}" method="post"
-                                                    id="employee_item_status{{ $employee_item->id }}_form"
-                                                    class="employee_item_status_form">
+                                                <form action="{{ route('customer.status-update') }}" method="post"
+                                                    id="customer_item_status{{ $customer_item->id }}_form"
+                                                    class="customer_item_status_form">
                                                     @csrf
-                                                    <input type="hidden" name="id" value="{{ $employee_item->id }}">
+                                                    <input type="hidden" name="id" value="{{ $customer_item->id }}">
                                                     <label class="switcher mx-auto">
                                                         <input type="checkbox" class="switcher_input"
-                                                            id="employee_item_status{{ $employee_item->id }}"
+                                                            id="customer_item_status{{ $customer_item->id }}"
                                                             name="status" value="1"
-                                                            {{ $employee_item->status == '1' ? 'checked' : '' }}
-                                                            onclick="toogleStatusModal(event,'employee_item_status{{ $employee_item->id }}',
-                                                'employee_item-status-on.png','employee_item-status-off.png',
-                                                '{{ translate('Want_to_Turn_ON') }} {{ $employee_item->name }} ',
-                                                '{{ translate('Want_to_Turn_OFF') }} {{ $employee_item->name }} ',
-                                                `<p>{{ translate('if_enabled_this_employee_item_will_be_available') }}</p>`,
-                                                `<p>{{ translate('if_disabled_this_employee_item_will_be_hidden') }}</p>`)">
+                                                            {{ $customer_item->status == '1' ? 'checked' : '' }}
+                                                            onclick="toogleStatusModal(event,'customer_item_status{{ $customer_item->id }}',
+                                                'customer_item-status-on.png','customer_item-status-off.png',
+                                                '{{ translate('Want_to_Turn_ON') }} {{ $customer_item->name }} ',
+                                                '{{ translate('Want_to_Turn_OFF') }} {{ $customer_item->name }} ',
+                                                `<p>{{ translate('if_enabled_this_customer_item_will_be_available') }}</p>`,
+                                                `<p>{{ translate('if_disabled_this_customer_item_will_be_hidden') }}</p>`)">
                                                         <span class="switcher_control"></span>
                                                     </label>
                                                 </form>
@@ -114,18 +114,24 @@
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
 
-                                                @if (\App\Helpers\Helpers::module_permission_check('edit_employee'))
+                                                @if (\App\Helpers\Helpers::module_permission_check('edit_customer'))
                                                     <a class="btn btn-outline--primary btn-sm square-btn"
                                                         title="{{ translate('edit') }}"
-                                                        href="{{ route('employee.edit', [$employee_item->id]) }}">
+                                                        href="{{ route('customer.edit', [$customer_item->id]) }}">
                                                         <i class="tio-edit"></i>
                                                     </a>
                                                 @endif
-                                                @if (\App\Helpers\Helpers::module_permission_check('delete_employee'))
+                                                @if (\App\Helpers\Helpers::module_permission_check('delete_customer'))
                                                     <a class="btn btn-outline-danger btn-sm delete square-btn"
-                                                        title="{{ translate('delete') }}" id="{{ $employee_item->id }}">
+                                                        title="{{ translate('delete') }}" id="{{ $customer_item->id }}">
                                                         <i class="tio-delete"></i>
                                                     </a>
+                                                @endif
+                                                @if (\App\Helpers\Helpers::module_permission_check('add_reminder'))
+                                                    <a id="reminder" class="btn btn-sm  btn-outline-primary square-btn "
+                                                        data-update="" data-toggle="modal" data-target="#update"
+                                                        data-id="{{ $customer_item['id'] }}"><i
+                                                            class="fas fa-file"></i></a>
                                                 @endif
                                             </div>
                                         </td>
@@ -144,12 +150,64 @@
 
                     @if (count($main) == 0)
                         <div class="text-center p-4">
-                            <img class="mb-3 w-160" src="{{ asset(main_path() . 'back-end') }}/svg/illustrations/sorry.svg"
+                            <img class="mb-3 w-160"
+                                src="{{ asset(main_path() . 'assets/back-end') }}/svg/illustrations/sorry.svg"
                                 alt="Image Description">
                             <p class="mb-0">{{ translate('no_data_to_show') }}</p>
                         </div>
                     @endif
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="update" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        {{ translate('add_reminder') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('customer.store_reminder') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Department Select -->
+                                <input type="hidden" name="customer_id">
+                                 
+                                <div class="col-md-6 col-lg-6 col-xl-6">
+                                    <div class="form-group">
+                                        <label for=""
+                                            class="form-control-label">{{ translate('reminder_at') }} </label>
+                                        <input type="date" class="form-control main_date" name="reminder_at">
+                                    </div>
+                                </div>
+                                 
+                                <div class="col-md-6 col-lg-12 col-xl-12">
+                                    <div class="form-group">
+                                        <label for=""
+                                            class="form-control-label">{{ translate('remark') }} </label>
+                                        <textarea class="form-control" cols="30" rows="2" name="note"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button value="update_department" name="bulk_action_btn" type="submit"
+                                class="btn btn--primary w-100">
+                                {{ translate('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
@@ -166,7 +224,7 @@
             $('#dataTable').DataTable();
         });
 
-        $('.employee_item_status_form').on('submit', function(event) {
+        $('.customer_item_status_form').on('submit', function(event) {
             event.preventDefault();
 
             $.ajaxSetup({
@@ -175,7 +233,7 @@
                 }
             });
             $.ajax({
-                url: "{{ route('employee.status-update') }}",
+                url: "{{ route('customer.status-update') }}",
                 method: 'POST',
                 data: $(this).serialize(),
                 success: function(data) {
@@ -213,7 +271,7 @@
                         }
                     });
                     $.ajax({
-                        url: "{{ route('employee.delete') }}",
+                        url: "{{ route('customer.delete') }}",
                         method: 'get',
                         data: {
                             id: id
@@ -225,6 +283,13 @@
                     });
                 }
             })
+        });
+    </script>
+
+    <script>
+        $(document).on('click', '#reminder', function() {
+            var customerId = $(this).data('id');
+            $('input[name="customer_id"]').val(customerId);
         });
     </script>
 @endpush

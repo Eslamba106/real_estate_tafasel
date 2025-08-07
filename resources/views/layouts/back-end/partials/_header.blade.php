@@ -1,3 +1,10 @@
+@php
+    $reminders = App\Models\CustomerReminder::where('user_id', auth()->id())
+    ->where('reminder_at', '<=', now())
+    ->where('notified', false)
+    ->get();
+
+@endphp
 <div id="headerMain" class="d-none">
     <header id="header"
         class="navbar navbar-expand-lg navbar-fixed navbar-height navbar-flush navbar-container shadow">
@@ -103,7 +110,25 @@
                             </a>
                         </div>
                     </li>
-
+                       {{-- @if (auth()->check())
+                        
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link" data-toggle="dropdown" href="#">
+                            <i class="tio-notifications"></i>
+                            <span class="badge badge-warning navbar-badge">{{ auth()->user()->unreadNotifications->count() }}</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
+                            @foreach (auth()->user()->unreadNotifications as $notification_item)
+                                <a href="{{ route("admin.notifications.read" , $notification_item->id) }}" class="dropdown-item"> {{ $notification_item->data['title'] }}
+                                <span class="float-right text-muted text-sm">{{ $notification_item->created_at->shortAbsoluteDiffForHumans() }}</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            @endforeach
+                            
+                        </div>
+                    </li>
+                    @endif --}}
                     <li class="nav-item">
                         <!-- Account -->
                         <div class="hs-unfold">
