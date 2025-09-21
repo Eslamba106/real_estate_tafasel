@@ -54,9 +54,9 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://tafasel.y-codex.org/'),
+    'url' => env('APP_URL', 'https://dev.y-codex.org/'),
 
-    'asset_url' => 'https://tafasel.y-codex.org/public/',
+    'asset_url' => 'https://dev.y-codex.org/public/',
 
     /*
     |--------------------------------------------------------------------------
