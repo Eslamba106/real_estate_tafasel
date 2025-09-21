@@ -3,9 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\CustomerLog;
+use App\Models\CustomerReminder;
 use App\Models\FloorManagement;
 use App\Models\Project;
-use App\Models\Schedule;
 use App\Models\Team;
 use App\Models\UnitManagement;
 use App\Models\User;
@@ -80,8 +80,12 @@ class CustomerController extends Controller
     public function create()
     {
         $projects = Project::select('id', 'name')->get();
-        $data     = [
+        $teams    = Team::select('id', 'name')->get();
+
+        $data = [
             "projects" => $projects,
+            'teams'    => $teams,
+
         ];
         return view("admin-views.crm.customers.create", $data);
     }
@@ -90,7 +94,7 @@ class CustomerController extends Controller
     {
         $validated = $request->validate([
             'name'       => 'required|string|max:255',
-            'phone'      => 'required|string|max:20',
+            'phone'      => 'required|string|max:20|unique:customers,phone',
             'email'      => 'nullable|email|max:255',
             'job'        => 'nullable|string|max:255',
             'project_id' => 'nullable|exists:projects,id',
@@ -98,23 +102,53 @@ class CustomerController extends Controller
             'unit_id'    => 'nullable',
             'budget'     => 'nullable|numeric',
         ]);
-        try {
-
+        DB::beginTransaction();
+        try { 
             $customer = Customer::create([
-                'name'       => $request->name,
-                'phone'      => $request->phone,
-                'email'      => $request->email,
-                'job'        => $request->job,
-                'project_id' => $request->project_id,
-                'floor_id'   => $request->floor_id,
-                'unit_id'    => $request->unit_id,
-                'budget'     => $request->budget,
-                'added_by'   => auth()->id(),
-                'assign_to'  => $request->assign_to,
+                'name'           => $request->name,
+                'phone'          => $request->phone,
+                'email'          => $request->email,
+                'job'            => $request->job,
+                'project_id'     => $request->project_id,
+                'floor_id'       => $request->floor_id,
+                'unit_id'        => $request->unit_id,
+                'budget'         => $request->budget,
+                'added_by'       => auth()->id(),
+                'assign_to'      => $request->employee_id ?? null,
+                'assign_to_team' => $request->team_id ?? null,
+                'assign_date'    => now(),
             ]);
+            if ($request->assign_note) {
+                CustomerLog::create([
+                    'customer_id' => $customer->id,
+                    'date'        => today(),
+                    'time'        => now(),
+                    'activity'    => 'assign to',
+                    'notes'       => $request->assign_note,
+                    'user_id'     => auth()->id(),
+                ]);
+            }
+            if ($request->reminder_at) {
+                CustomerReminder::create([
+                    'customer_id' => $customer->id,
+                    'user_id'     => auth()->id(),
+                    'note'        => $request->reminder_note,
+                    'reminder_at' => $request->reminder_at,
+                ]);
+                CustomerLog::create([
+                    'customer_id' => $customer->id,
+                    'date'        => today(),
+                    'time'        => now(),
+                    'activity'    => 'add_reminder',
+                    'notes'       => $request->reminder_note,
+                    'user_id'     => auth()->id(),
+                ]);
+            }
             Toastr::success(translate('added_successfully'));
+            DB::commit();
             return to_route('customer.index')->with('success', translate('added_successfully'));
         } catch (Exception $ex) {
+            DB::rollBack();
             return back()->with('error', $ex->getMessage())->withInput();
         }
     }
@@ -150,7 +184,6 @@ class CustomerController extends Controller
             return back()->with('error', $ex->getMessage());
         }
     }
-
 
     public function get_floors_by_project($id)
     {

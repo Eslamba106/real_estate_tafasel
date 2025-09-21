@@ -61,11 +61,12 @@
                                 @enderror
                             </div>
                         </div>
-                         <div class="col-md-6 col-lg-4 col-xl-4">
+                        <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
-                                <label for="name" class="title-color">{{ translate('phone') }} <span class="text-danger">
+                                <label for="name" class="title-color">{{ translate('phone') }} <span
+                                        class="text-danger">
                                         *</span></label>
-                                <input type="text" class="form-control" name="phone"  value="{{ old('phone') }}">
+                                <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
                                 @error('phone')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -75,13 +76,15 @@
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
-                                <label for="code" class="title-color">{{ translate('project') }}<span class="text-danger" >
+                                <label for="code" class="title-color">{{ translate('project') }}<span
+                                        class="text-danger">
                                         *</span>
                                 </label>
-                                <select class="js-select2-custom form-control"  onchange="floor(this)" name="project_id" required>
+                                <select class="js-select2-custom form-control" onchange="floor(this)" name="project_id"
+                                    required>
                                     <option value="" selected>{{ translate('select') }}</option>
                                     @foreach ($projects as $project)
-                                        <option value="{{ $project->id }}" >{{ $project->name }}
+                                        <option value="{{ $project->id }}">{{ $project->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -97,9 +100,10 @@
                                 <label for="code" class="title-color">{{ translate('floor') }}<span
                                         class="text-danger"> *</span>
                                 </label>
-                                <select class="js-select2-custom form-control" onchange="units(this)"  name="floor_id" required>
+                                <select class="js-select2-custom form-control" onchange="units(this)" name="floor_id"
+                                    required>
                                     <option value="" selected>{{ translate('select') }}</option>
-                                   
+
                                 </select>
                             </div>
                             @error('floor_id')
@@ -107,15 +111,15 @@
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div> 
+                        </div>
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
-                                <label for="code" class="title-color">{{ translate('unit') }}<span
-                                        class="text-danger"> *</span>
+                                <label for="code" class="title-color">{{ translate('unit') }}<span class="text-danger">
+                                        *</span>
                                 </label>
                                 <select class="js-select2-custom form-control" name="unit_id" required>
                                     <option value="" selected>{{ translate('select') }}</option>
-                                   
+
                                 </select>
                             </div>
                             @error('unit_id')
@@ -123,11 +127,11 @@
                                     {{ $message }}
                                 </div>
                             @enderror
-                        </div> 
+                        </div>
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
                                 <label for="name" class="title-color">{{ translate('email') }} </label>
-                                <input type="text" class="form-control" name="email"  value="{{ old('email') }}">
+                                <input type="text" class="form-control" name="email" value="{{ old('email') }}">
                                 @error('email')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -138,7 +142,7 @@
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
                                 <label for="budget" class="title-color">{{ translate('budget') }} </label>
-                                <input type="text" class="form-control" name="budget"  value="{{ old('budget') }}">
+                                <input type="number" class="form-control" name="budget" value="{{ old('budget') }}">
                                 @error('budget')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -149,7 +153,7 @@
                         <div class="col-md-6 col-lg-4 col-xl-4">
                             <div class="form-group">
                                 <label for="job" class="title-color">{{ translate('job') }} </label>
-                                <input type="text" class="form-control" name="job"  value="{{ old('job') }}">
+                                <input type="text" class="form-control" name="job" value="{{ old('job') }}">
                                 @error('job')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -157,19 +161,124 @@
                                 @enderror
                             </div>
                         </div>
-                       
-
-
                     </div>
                 </div>
-            
+            </div>
+            <div class="card mt-3 rest-part">
+                <div class="card-header">
+                    <div class="d-flex gap-2">
+                        <h4 class="mb-0">{{ translate('assign_To_Team') }}</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <label for="code" class="title-color">{{ translate('teams') }}<span
+                                        class="text-danger">
+                                        *</span>
+                                </label>
+                                <select class="js-select2-custom form-control" onchange="employee(this)" name="team_id"
+                                     >
+                                    <option value="">{{ translate('select') }}</option>
+                                    @foreach ($teams as $team)
+                                        <option value="{{ $team->id }}">{{ $team->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @error('team_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <label for="code" class="title-color">{{ translate('employee') }}<span
+                                        class="text-danger"> *</span>
+                                </label>
+                                <select class="js-select2-custom form-control" name="employee_id"  >
+                                    <option value="" selected>{{ translate('select') }}</option>
 
+                                </select>
+                            </div>
+                            @error('employee_id')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ translate('remark') }}
+                                </label>
+                                <textarea class="form-control" cols="30" rows="2" name="assign_note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="card mt-3 rest-part">
+                <div class="card-header">
+                    <div class="d-flex gap-2">
+                        <h4 class="mb-0">{{ translate('add_Action') }}</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ translate('title') }}
+                                </label>
+                                <input type="text" class="form-control main_date" name="activity">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ translate('remark') }}
+                                </label>
+                                <textarea class="form-control" cols="30" rows="2" name="action_note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3 rest-part">
+                <div class="card-header">
+                    <div class="d-flex gap-2">
+                        <h4 class="mb-0">{{ translate('add_Reminder') }}</h4>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 col-xl-6">
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ translate('reminder_at') }}
+                                </label>
+                                <input type="date" class="form-control main_date" name="reminder_at">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-12 col-xl-12">
+                            <div class="form-group">
+                                <label for="" class="form-control-label">{{ translate('remark') }}
+                                </label>
+                                <textarea class="form-control" cols="30" rows="2" name="reminder_note"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
 
             <div class="row justify-content-end gap-3 mt-3 mx-1 m-2">
                 <button type="reset" class="btn btn-secondary px-5">{{ translate('reset') }}</button>
                 <button type="submit" class="btn btn--primary px-5">{{ translate('submit') }}</button>
-            </div></div>
+            </div>
         </form>
     </div>
 @endsection
@@ -179,7 +288,6 @@
     <script src="{{ asset('assets/back-end/js/spartan-multi-image-picker.js') }}"></script>
 
     <script>
-     
         $(document).on('ready', function() {
             // INITIALIZATION OF SHOW PASSWORD
             // =======================================================
@@ -214,7 +322,7 @@
         });
     </script>
 
-       <script>
+    <script>
         function floor(element) {
             var id = element.value;
 
@@ -255,8 +363,8 @@
                     Select.empty();
                     Select.append('<option value="">{{ translate('select_unit') }}</option>');
 
-                        // console.log(data)
-                        // console.log("nnn " + data.sub_categories)
+                    // console.log(data)
+                    // console.log("nnn " + data.sub_categories)
                     if (data.units && Array.isArray(data.units) && data.units.length > 0) {
                         data.units.forEach(function(unit) {
                             Select.append(
@@ -271,6 +379,36 @@
                     console.error('Error fetching unit:', error);
                 }
             });
-        }  
-    </script> 
+        }
+    </script>
+
+    <script>
+        function employee(element) {
+            var id = element.value;
+
+            $.ajax({
+                url: "{{ route('customer.get_employee_by_team_id', ':id') }}".replace(':id', id),
+                type: "GET",
+                dataType: "json",
+                success: function(data) {
+                    var Select = $("select[name='employee_id']");
+                    Select.empty();
+                    Select.append('<option value="">{{ translate('select_employee') }}</option>');
+                    console.log(data)
+                    if (data.employees && Array.isArray(data.employees) && data.employees.length > 0) {
+                        data.employees.forEach(function(employee) {
+                            Select.append(
+                                `<option value="${employee.id}">${employee.name}</option>`
+                            );
+                        });
+                    } else {
+                        console.warn("No employee returned.");
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error fetching employee :', error);
+                }
+            });
+        }
+    </script>
 @endpush

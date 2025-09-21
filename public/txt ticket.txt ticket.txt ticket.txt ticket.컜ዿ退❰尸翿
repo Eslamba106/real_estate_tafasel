@@ -1,0 +1,759 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use App\Models\CustomField;
+use App\Mail\SendCloseTicket;
+use App\Mail\SendTicket;
+use App\Models\Ticket;
+use App\Models\User;
+use App\Models\Utility;
+use App\Models\UserCatgory;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+use App\Exports\TicketsExport;
+use App\Models\Customer;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\Priority;
+use App\Models\CustomerController;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+
+class TicketController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+    //     $post['ticket_id']="D0001";
+    //     $msg="Macaamiilkeena Sharafta leh waxaa kuu shaqeyn doona mid ka mid ah Shaqaalaha shirkadda Tell kiisu yahay, Muddo 30 Daqiiqo Gudahood. Ticket ID :".$post['ticket_id'];
+
+    //    Utility::sendSMS('252618601212',$msg);
+
+    //    die;
+        
+       // Utility::sendSMS('252618601212',"test");
+        
+        
+
+     //         $user = User::find(8);
+//  $user_role = Role::where('name','admin')->pluck('id');
+//             $role = Role::find($user_role);
+//             if($role)
+//             {
+//                 $user->assignRole($role);
+//                 $user->userDefaultDataRegister($user->id);
+//             }
+//        die;
+       // $permission=Permission::whereIn('id',array(1,2,3,4,5))->get();
+
+ //$companyRole=Role::where('name', '=', 'Agent')->first();
+   //      $companyRole->givePermissionTo($permission);
+         
+         
+         
+        $user = \Auth::user();
+        
+        if($user->can('manage-tickets'))
+        {
+            //echo "<pre>"; print_r($user->categories);
+
+            if(\Auth::user()->parent == 0 || \Auth::user()->parent == 2 || \Auth::user()->type=="Manager")
+            {
+                
+
+				$category_ids = UserCatgory::where('user_id',auth()->user()->id)->pluck('category_id');
+
+                if(\Auth::user()->type=="Manager")
+                {
+                    $categories1 = UserCatgory::where('user_id',auth()->user()->id)->pluck('category_id');
+
+                    $categories = \DB::table('categories')
+                        ->join('user_categories', 'user_categories.category_id', '=', 'categories.id')
+                        ->select(['user_categories.category_id', 'categories.name','categories.id'])
+                        ->where('user_id', auth()->user()->id)
+                        ->whereIn('categories.id', $categories1)
+                        ->pluck('categories.name','categories.id');
+                        $categories->prepend('Select Category','All');
+                }
+                else{
+                    $categories = Category::get()->pluck('name','id');
+                }
+               
+                $categories->prepend('Select Category','All');
+                $priorities = Priority::where('created_by',\Auth::user()->createId())->get()->pluck('name','id');
+                $priorities->prepend('Select Priority','All');
+
+                $staff=User::where('phone','!=', NULL)->get()->pluck('name','id');
+                $staff->prepend('Select staff','All');
+
+                $statues = Ticket::$statues;
+
+                $tickets = Ticket::select(
+                    [
+                        'tickets.*',
+                        'categories.name as category_name',
+                        'categories.color',
+                        'priorities.color as priorities_color',
+                        'priorities.name as priorities_name',
+                    ]
+                )->join('categories', 'categories.id', '=', 'tickets.category')->join('priorities', 'priorities.id', '=', 'tickets.priority');
+
+
+                if($request->category != 'All' && $request->all() != null){
+                    $tickets->where('category',$request->category);
+
+                }
+
+                if($request->priority != 'All' && $request->all() != null){
+                    $tickets->where('priority',$request->priority);
+
+                }
+
+                if($request->status != 'All' && $request->all() != null){
+                    $tickets->where('status',$request->status);
+                }
+
+                if($request->assigned_to != 'All' && $request->all() != null){
+                    $tickets->where('assigned_to',$request->assigned_to);
+                }
+
+				if(\Auth::user()->type=="Manager")
+				{
+					$tickets->whereIn('category', $category_ids);
+				}
+				
+                $tickets = $tickets->orderBy('id', 'desc')->get();
+                
+                return view('admin.tickets.index', compact('tickets','categories','priorities','statues','staff'));
+            }
+            else
+            {
+                $categories1 = UserCatgory::where('user_id',auth()->user()->id)->pluck('category_id');
+
+                $categories = \DB::table('categories')
+                    ->join('user_categories', 'user_categories.category_id', '=', 'categories.id')
+                    ->select(['user_categories.category_id', 'categories.name','categories.id'])
+                    ->where('user_id', auth()->user()->id)
+                    ->whereIn('categories.id', $categories1)
+                    ->pluck('categories.name','categories.id');
+                    $categories->prepend('Select Category','All');
+
+                $priorities = Priority::where('created_by',\Auth::user()->createId())->get()->pluck('name','id');
+                $priorities->prepend('Select Priority','All');
+                $statues = Ticket::$statues;
+
+                $staff=User::where('phone','!=', NULL)->get()->pluck('name','id');
+                $staff->prepend('Select staff','All');
+
+                $tickets = Ticket::select(
+                    [
+                        'tickets.*',
+                        'categories.name as category_name',
+                        'categories.color',
+                        'priorities.color as priorities_color',
+                        'priorities.name as priorities_name',
+                    ]
+                )->join('categories', 'categories.id', '=', 'tickets.category')->join('priorities', 'priorities.id', '=', 'tickets.priority')
+                ->where('tickets.created_by',auth()->user()->id)->orWhere('manager_id', '=', auth()->user()->id)->orWhere('cto_id', '=', auth()->user()->id);
+                
+              //  )->join('categories', 'categories.id', '=', 'tickets.category')->join('priorities', 'priorities.id', '=', 'tickets.priority')->whereIn('category',$categories1);
+
+                if($request->category != 'All' && $request->all() != null){
+
+                    $tickets->where('category',$request->category);
+
+                }
+
+                if($request->priority != 'All' && $request->all() != null){
+                    $tickets->where('priority',$request->priority);
+
+                }
+
+                if($request->status != 'All' && $request->all() != null){
+                    $tickets->where('status',$request->status);
+                }
+
+                if($request->assigned_to != 'All' && $request->all() != null){
+                    $tickets->where('assigned_to',$request->assigned_to);
+                }
+                $tickets = $tickets->orderBy('id', 'desc')->get();
+                
+                return view('admin.tickets.index', compact('tickets','categories','priorities','statues','staff'));
+            }
+
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $user = \Auth::user();
+        if($user->can('manage-tickets'))
+        {
+            $customFields = CustomField::where('id', '>', '7')->get();
+
+            $categories1 = UserCatgory::where('user_id',auth()->user()->id)->pluck('category_id');
+            $categories = Category::whereIn('id',$categories1)->get();
+
+            $priorities = Priority::where('created_by',\Auth::user()->createId())->get();
+            $customers = Customer::get();
+
+
+            return view('admin.tickets.create', compact('categories', 'customFields','priorities','customers'));
+        }
+        else
+        {
+            return view('403');
+        }
+    }    
+    public function customerSearch(Request $request)
+    {
+        $query = $request->input('q');
+
+        if(empty($query)){
+            $customers = Customer::get();
+        }
+        else
+        {
+            $customers = Customer::where('name', 'like', "%$query%")
+            ->orWhere('phone', 'like', "%$query%")
+            ->orWhere('house_no', 'like', "$query")
+            ->limit(100)
+            ->get();
+        }
+
+        return response()->json($customers);
+    }
+    
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $user = \Auth::user();
+        if($user->can('manage-tickets'))
+        {
+            $validation = [
+                //'email' => 'nullable|string|email|max:255',
+                'category' => 'required|string|max:255',
+                'priority' => 'required|string|max:255',
+                'subject' => 'required|string|max:255',
+                'status' => 'required|string|max:100',
+                'description' => 'required',
+                //'assigned_to' => 'required',
+                'customer_id' => 'required',
+            ];
+
+            
+            $this->validate($request, $validation);
+
+            $post              = $request->all();
+
+            
+            
+          
+            $post['ticket_id'] = Utility::getTicketNo();
+            $post['name'] = Customer::where('id',$request->customer_id)->first()->name;
+            
+            $customer_phone = Customer::where('id',$request->customer_id)->first()->phone;
+            
+            $post['created_by'] = \Auth::user()->id;
+            $data              = [];
+            if($request->hasfile('attachments'))
+            {
+                $errors=[];
+                foreach($request->file('attachments') as $filekey => $file)
+                {
+                    $name = $file->getClientOriginalName();
+                    $dir        = ('tickets/' . $post['ticket_id']);
+                    $path = Utility::multipalFileUpload($request,'attachments',$name,$dir,$filekey,[]);
+
+                    if($path['flag'] == 1){
+                        $data[] = $path['url'];
+                    }
+                    elseif($path['flag'] == 0){
+                        $errors = __($path['msg']);
+                    }
+
+                }
+            }
+
+            $post['attachments'] = json_encode($data);
+          
+            $ticket              = Ticket::create($post);
+
+            CustomField::saveData($ticket, $request->customField);
+
+            if(\Auth::user()->type=="CTO" || \Auth::user()->type=="BFO")
+            {
+                $u=User::find($post['assigned_to']);
+                $to=@$u->phone;
+            }
+
+            // slack //
+
+            $settings  = Utility::settings(\Auth::user()->createId());
+            if(isset($settings['ticket_notification']) && $settings['ticket_notification'] ==1){
+                $uArr = [
+                    'name' => $request->name,
+                    'email' => $user->email,
+                    'category' => $request->category,
+                    'subject' => $request->subject,
+                    'status' => $request->status,
+                    'description' => $request->description,
+                    'user_name'  => \Auth::user()->name,
+                ];
+                Utility::send_slack_msg('new_ticket', $uArr);
+            }
+
+            // telegram //
+            $settings  = Utility::settings(\Auth::user()->createId());
+            if(isset($settings['telegram_ticket_notification']) && $settings['telegram_ticket_notification'] ==1){
+                $uArr = [
+                    'name' => $request->name,
+                    'email' => $user->email,
+                    'category' => $request->category,
+                    'subject' => $request->subject,
+                    'status' => $request->status,
+                    'description' => $request->description,
+                    'user_name'  => \Auth::user()->name,
+                ];
+                Utility::send_telegram_msg('new_ticket', $uArr);
+            }
+
+
+            //send sms
+             if(!empty($to) and !is_null($to))
+             {
+                // $msg="Ticket:".$post['ticket_id'].", ";
+                // $msg.="Customer:".$post['name'].", ";
+                // $msg.="Priority:".$post['priority'].", ";
+                // $msg.="Subject:".$request->subject.", ";
+                // $msg.="Detail:".strip_tags($request->description);
+
+                $msg="Ticket ID: ".$post['ticket_id']." Fadlan waxaa lagugu amraayaa in macaamilkaan ".$ticket->customer->phone." u qabato shaqada ".$ticket->category->name.": 30 Daqiiqo gudahooda.. Mahadsanid";
+                
+                if(\Auth::user()->type=="CTO" || \Auth::user()->type=="BFO")
+                {
+                    Utility::sendSMS($to,$msg);
+                }
+                
+                //Utility::sendSMS('252618601212',$msg);
+            }
+            
+            
+             if(!empty($customer_phone) && !is_null($customer_phone) && in_array($ticket->category,[1,3,4]))
+             {
+                
+                //$msg="Our values customer, we will solve the issue shortly by one of our staff, Mobile no:".$to.", Ticket:".$post['ticket_id']." within 30 mins";
+
+                
+
+                $msg="Macaamiilkeena Sharafta leh waxaa kuu shaqeyn doona mid ka mid ah Shaqaalaha shirkadda Tell kiisu yahay, Muddo 30 Daqiiqo Gudahood. Ticket ID :".$post['ticket_id'];
+
+
+                 Utility::sendSMS($customer_phone,$msg);
+              //  Utility::sendSMS('252618601212',$msg);
+            }
+            
+            // Send Email to User
+
+            $uArr = [
+                'ticket_name' => $ticket->name,
+              //  'email' => $request->email,
+                'category' => $request->category,
+                'status' => $request->status,
+                'description' => $request->description,
+                'ticket_id' => $ticket->ticket_id,
+            ];
+
+
+            $module = 'New Ticket';
+            $webhook =  Utility::webhookSetting($module,$user->created_by);
+
+            if ($webhook) {
+                $parameter = json_encode($ticket);
+                // 1 parameter is  URL , 2 parameter is data , 3 parameter is method
+                $status = Utility::WebhookCall($webhook['url'], $parameter, $webhook['method']);
+                if ($status == true) {
+
+                    return redirect()->back()->with('success', __('ticket successfully created!'));
+                } else {
+                    return redirect()->back()->with('error', __('Webhook call failed.'));
+                }
+            }
+
+
+            //Mail Send Agent
+            $userids = UserCatgory::where('category_id',$request->category)->pluck('user_id');
+            $agents = User::whereIn('id',$userids)->get();
+
+             foreach($agents as $agent)
+             {
+                Utility::sendEmailTemplate('new_ticket', [$agent->email], $uArr, \Auth::user());
+             }
+
+            // Mail Send  Ticket User
+               // Utility::sendEmailTemplate('new_ticket', [$request->email], $uArr, \Auth::user());
+
+            //Mail Send Auth User
+                Utility::sendEmailTemplate('new_ticket', [\Auth::user()->email], $uArr, \Auth::user());
+
+
+            // Send Email to
+            if(isset($error_msg))
+            {
+                Session::put('smtp_error', '<span class="text-danger ml-2">' . $error_msg . '</span>');
+            }
+            // Session::put('ticket_id', ' <a class="text text-primary" target="_blank" href="' . route('home.view', \Illuminate\Support\Facades\Crypt::encrypt($ticket->ticket_id)) . '"><b>' . __('Your unique ticket link is this.') . '</b></a>');
+
+            
+
+            return redirect()->route('admin.tickets.index')->with('success', __('Ticket created successfully'));
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    public function storeNote($ticketID, Request $request)
+    {
+        $user = \Auth::user();
+        if($user->can('reply-tickets'))
+        {
+            $validation = [
+                'note' => ['required'],
+            ];
+            $this->validate($request, $validation);
+
+            $ticket = Ticket::find($ticketID);
+            if($ticket)
+            {
+                $ticket->note = $request->note;
+                $ticket->save();
+
+                return redirect()->back()->with('success', __('Ticket note saved successfully'));
+            }
+            else
+            {
+                return view('403');
+            }
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param \App\Ticket $ticket
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Ticket $ticket)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param \App\Ticket $ticket
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function editTicket($id)
+    {
+        $user = \Auth::user();
+        if($user->can('edit-tickets'))
+        {
+            $ticket = Ticket::find($id);
+            if($ticket)
+            {
+                $customFields        = CustomField::where('id', '>', '7')->get();
+                $ticket->customField = CustomField::getData($ticket);
+                $categories          = Category::get();
+                $priorities = Priority::where('created_by',\Auth::user()->createId())->get();
+                $customers = Customer::get();
+
+                return view('admin.tickets.edit', compact('ticket', 'categories', 'customFields','priorities','customers'));
+            }
+            else
+            {
+                return view('403');
+            }
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Ticket $ticket
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function updateTicket(Request $request, $id)
+    {
+        $user = \Auth::user();
+        if($user->can('edit-tickets') || true)
+        {
+            
+            // echo '<pre>ac:';
+            // print_r($request->all());
+            // exit();
+            $ticket = Ticket::find($id);
+            if($ticket)
+            {
+                $validation = [
+                    //'name' => 'required|string|max:255',
+                    //'email' => 'required|string|email|max:255',
+                    'category' => 'required|string|max:255',
+                    'priority' => 'required|string|max:255',
+                    'subject' => 'required|string|max:255',
+                    'status' => 'required|string|max:100',
+                    // 'description' => 'required',
+                    //'assigned_to' => 'required',
+                    'customer_id' => 'required',
+                ];
+
+                $this->validate($request, $validation);
+
+                $post = $request->all();
+                $assign_to_array=@$post['assigned_to'];
+                if(isset($post['assigned_to']) && !empty($post['assigned_to']))
+                {
+                    $post['assigned_to']=implode(',',$post['assigned_to']);
+                }
+                
+                $post['name'] = Customer::where('id',$request->customer_id)->first()->name;;
+                
+                if($request->hasfile('attachments'))
+                {
+                    $data = json_decode($ticket->attachments, true);
+                    foreach($request->file('attachments') as $filekey => $file)
+                    {
+                        $name = $file->getClientOriginalName();
+                        $file->storeAs('tickets/' . $ticket->ticket_id, $name);
+                        $data[] = $name;
+                        $url = '';
+                        $dir        = ('tickets/' . $ticket->ticket_id);
+                        $path = Utility::multipalFileUpload($request,'attachments',$name,$dir,$filekey,[]);
+                        if($path['flag'] == 1){
+                            $url = $path['url'];
+                        }else{
+                            return redirect()->route('admin.tickets.store', \Auth::user()->id)->with('error', __($path['msg']));
+                        }
+                    }
+                    $post['attachments'] = json_encode($data);
+                }
+                if($request->status == 'Resolved')
+                {
+                    $ticket->reslove_at = now();
+                }
+                $ticket->update($post);
+                CustomField::saveData($ticket, $request->customField);
+
+                $customerDetail = Customer::where('id',$ticket->customer_id)->first();
+                     $customer_phone = $customerDetail->phone;
+
+                if(isset($assign_to_array) && !empty($assign_to_array))
+                {
+                    foreach($assign_to_array as $assigned_to)
+                    {
+                      
+                        $toStaff=User::find($assigned_to);
+                        $to=$toStaff->phone;
+                          
+                        if(!empty($to) and !is_null($to))
+                        {
+                            
+                            $msg="Ticket:".$ticket->ticket_id.",";
+                            $msg.="Customer:".$ticket->name.",";
+                            $msg.="Priority:".$ticket->priority.",";
+                            $msg.="Subject:".$ticket->subject.",";
+                            $msg.="Detail:".strip_tags($ticket->description);
+                            
+                            if(\Auth::user()->type=="CTO" || \Auth::user()->type=="BFO")
+                            {
+                                $msg="Ticket ID: ".$ticket->ticket_id." Fadlan waxaa lagugu amraayaa in macaamilkaan ".$ticket->customer->phone." u qabato shaqada ".$ticket->categorydetail->name.": 30 Daqiiqo gudahooda.. Mahadsanid";
+
+                                Utility::sendSMS($to,$msg);
+
+                              
+                               
+                            }
+                            
+                            //Utility::sendSMS('252618601212',$msg);
+                        }
+                    }
+
+                    if(in_array($ticket->category,[1,3,4]))
+                              {
+                                $msg="Macaamiilkeena Sharafta leh waxaa kuu shaqeyn doona mid ka mid ah Shaqaalaha shirkadda Tell kiisu yahay: ".$toStaff->phone." ID: ".$toStaff->employe_id." Muddo 30 Daqiiqo Gudahood. Ticket ID NO:".$ticket->ticket_id;
+
+                                Utility::sendSMS($customer_phone,$msg);
+                              }
+                }
+                
+
+                $error_msg = '';
+                if($ticket->status == 'Closed')
+                {
+                    // Send Email to User
+                    try
+                    {
+                       // Mail::to($ticket->email)->send(new SendCloseTicket($ticket));
+                    }
+                    catch(\Exception $e)
+                    {
+                        $error_msg = "E-Mail has been not sent due to SMTP configuration ";
+                    }
+                }
+
+                return redirect()->back()->with('success', __('Ticket updated successfully.') . ((isset($error_msg) && !empty($error_msg)) ? '<span class="text-danger">' . $error_msg . '</span>' : ''));
+
+            }
+            else
+            {
+                return view('403');
+            }
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param \App\Ticket $ticket
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $user = \Auth::user();
+        if($user->can('edit-tickets'))
+        {
+            $ticket = Ticket::find($id);
+            $ticket->delete();
+
+            return redirect()->back()->with('success', __('Ticket deleted successfully'));
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    public function attachmentDestroy($ticket_id, $id)
+    {
+        $user = \Auth::user();
+        if($user->can('edit-tickets'))
+        {
+            $ticket      = Ticket::find($ticket_id);
+            $attachments = json_decode($ticket->attachments);
+            if(isset($attachments[$id]))
+            {
+                if(asset(Storage::exists('tickets/' . $ticket->ticket_id . "/" . $attachments[$id])))
+                {
+                    asset(Storage::delete('tickets/' . $ticket->ticket_id . "/" . $attachments[$id]));
+                }
+                unset($attachments[$id]);
+                $ticket->attachments = json_encode(array_values($attachments));
+                $ticket->save();
+
+                return redirect()->back()->with('success', __('Attachment deleted successfully'));
+            }
+            else
+            {
+                return redirect()->back()->with('error', __('Attachment is missing'));
+            }
+        }
+        else
+        {
+            return view('403');
+        }
+    }
+
+    public function export()
+    {
+        $name = 'Tickets' . date('Y-m-d i:h:s');
+        $data = Excel::download(new TicketsExport(), $name . '.csv');
+
+        return $data;
+    }
+
+    public function statusUpdate($id)
+    {
+        $user = \Auth::user();
+        
+            $ticket = Ticket::find($id);
+            $ticket->status="Rejected";
+
+            if($ticket->save())
+            {
+                return redirect()->route('admin.tickets.index')->with('success', __('Ticket created successfully'));
+            }
+            else
+            {
+                return view('403');
+            }
+        
+    }
+
+    public function statusUpdateAccept($id)
+    {
+        $user = \Auth::user();
+        
+            $ticket = Ticket::find($id);
+            $ticket->status="Accepted";
+            //if($user->type=="Agent")
+            //{
+                $ticket->manager_id=$user->id;
+            //}
+            
+
+            if($ticket->save())
+            {
+                return redirect()->route('admin.tickets.index')->with('success', __('Ticket created successfully'));
+            }
+            else
+            {
+                return view('403');
+            }
+        
+    }
+
+
+
+}

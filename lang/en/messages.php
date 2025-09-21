@@ -450,4 +450,7 @@
   'edit unit management' => 'Edit unit management',
   'delete unit management' => 'Delete unit management',
   'change status unit management' => 'Change status unit management',
+  'customers' => 'Customers',
+  'My_Reminders' => 'My Reminders',
+  'installments_list' => 'Installments list',
 );

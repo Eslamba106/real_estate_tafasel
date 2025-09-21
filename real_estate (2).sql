@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Aug 05, 2025 at 03:56 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Aug 07, 2025 at 02:58 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `real_estate`
+-- Database: `pfm`
 --
 
 -- --------------------------------------------------------
@@ -42,7 +42,8 @@ CREATE TABLE `admin_roles` (
 
 INSERT INTO `admin_roles` (`id`, `name`, `module_access`, `status`, `created_at`, `updated_at`) VALUES
 (1, 'Master Admin', NULL, 1, NULL, NULL),
-(2, 'Team Leader', '[\"dashboard\",\"edit_unit_description\",\"edit_unit_condition\",\"edit_unit_type\"]', 1, '2025-08-03 16:03:21', '2025-08-03 16:03:21');
+(2, 'Team Leader', '[\"dashboard\",\"edit_unit_description\",\"edit_unit_condition\",\"edit_unit_type\"]', 1, '2025-08-03 16:03:21', '2025-08-03 16:03:21'),
+(3, 'Employee', '[\"projects\",\"show_all_project\",\"show_project\",\"floor_management\",\"show_all_floor_management\",\"unit_management\",\"show_all_unit_management\",\"add_reminder\" ,\"show_all_customers\"]', 1, '2025-08-07 05:03:52', '2025-08-07 05:03:52');
 
 -- --------------------------------------------------------
 
@@ -193,6 +194,103 @@ INSERT INTO `business_settings` (`id`, `type`, `value`, `created_at`, `updated_a
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `customers`
+--
+
+CREATE TABLE `customers` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `phone` varchar(255) NOT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `budget` varchar(255) DEFAULT NULL,
+  `job` varchar(255) DEFAULT NULL,
+  `unit_id` int(11) DEFAULT NULL,
+  `project_id` int(11) DEFAULT NULL,
+  `floor_id` int(11) DEFAULT NULL,
+  `added_by` int(11) DEFAULT NULL,
+  `assign_to_team` int(11) DEFAULT NULL,
+  `assign_to` int(11) DEFAULT NULL,
+  `assign_date` date DEFAULT NULL,
+  `status` int(11) NOT NULL DEFAULT 1,
+  `booking_status` enum('empty','request','review','meeting','booking','agreement') NOT NULL DEFAULT 'empty',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `quarterly_installments_start_from_the_date` date DEFAULT NULL,
+  `advance_payment` varchar(255) DEFAULT NULL,
+  `deposite` varchar(255) DEFAULT NULL,
+  `price` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customers`
+--
+
+INSERT INTO `customers` (`id`, `name`, `phone`, `email`, `budget`, `job`, `unit_id`, `project_id`, `floor_id`, `added_by`, `assign_to_team`, `assign_to`, `assign_date`, `status`, `booking_status`, `created_at`, `updated_at`, `quarterly_installments_start_from_the_date`, `advance_payment`, `deposite`, `price`) VALUES
+(1, 'Eslam', '01150099801', 'eslam@gmail.com', '260', 'employee', 4, 2, 2, 1, 1, 5, '2025-08-07', 1, 'agreement', '2025-08-07 05:41:55', '2025-08-07 09:12:52', '2025-09-01', '570000', '30000', '1800000'),
+(2, 'new Customer', '33306263', NULL, NULL, NULL, 4, 2, 2, 1, 1, 5, '2025-08-07', 1, 'booking', '2025-08-07 05:58:20', '2025-08-07 05:59:41', NULL, NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_logs`
+--
+
+CREATE TABLE `customer_logs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date DEFAULT NULL,
+  `time` time DEFAULT NULL,
+  `activity` varchar(255) DEFAULT NULL,
+  `unit_price` varchar(255) DEFAULT NULL,
+  `deposite` varchar(255) DEFAULT NULL,
+  `quarterly_installments_start_from_the_date` date DEFAULT NULL,
+  `notes` text DEFAULT NULL,
+  `user_id` tinyint(4) DEFAULT NULL,
+  `employee_id` tinyint(4) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `customer_reminders`
+--
+
+CREATE TABLE `customer_reminders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `note` text DEFAULT NULL,
+  `reminder_at` datetime NOT NULL,
+  `notified` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `customer_reminders`
+--
+
+INSERT INTO `customer_reminders` (`id`, `customer_id`, `user_id`, `note`, `reminder_at`, `notified`, `created_at`, `updated_at`) VALUES
+(1, 2, 5, 'تذكير جديد', '2025-08-07 00:00:00', 0, '2025-08-07 06:34:30', '2025-08-07 06:34:30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `employees`
+--
+
+CREATE TABLE `employees` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `failed_jobs`
 --
 
@@ -292,7 +390,12 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 (16, '2025_07_31_081706_create_floor_management_table', 7),
 (17, '2025_07_31_083039_create_unit_management_table', 8),
 (19, '2025_07_31_183832_create_theme_settings_table', 9),
-(21, '2025_08_02_114300_create_teams_table', 10);
+(21, '2025_08_02_114300_create_teams_table', 10),
+(35, '2025_08_02_123950_create_employees_table', 11),
+(36, '2025_08_05_154339_create_customers_table', 11),
+(37, '2025_08_06_140639_create_customer_reminders_table', 11),
+(39, '2025_08_06_143434_create_customer_logs_table', 12),
+(40, '2025_08_07_105951_create_schedules_table', 13);
 
 -- --------------------------------------------------------
 
@@ -372,6 +475,36 @@ CREATE TABLE `property_types` (
 
 INSERT INTO `property_types` (`id`, `name`, `status`, `branch_id`, `created_at`, `updated_at`) VALUES
 (1, 'Commercial', 'active', NULL, '2025-07-31 04:43:24', '2025-07-31 04:43:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `schedules`
+--
+
+CREATE TABLE `schedules` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `customer_id` bigint(20) UNSIGNED NOT NULL,
+  `date` date DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `schedules`
+--
+
+INSERT INTO `schedules` (`id`, `customer_id`, `date`, `value`, `status`, `created_at`, `updated_at`) VALUES
+(23, 1, '2025-08-01', '150000', '1', '2025-08-07 09:12:52', '2025-08-07 09:41:43'),
+(24, 1, '2025-12-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(25, 1, '2026-03-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(26, 1, '2026-06-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(27, 1, '2026-09-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(28, 1, '2026-12-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(29, 1, '2027-03-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52'),
+(30, 1, '2027-06-01', '150000', NULL, '2025-08-07 09:12:52', '2025-08-07 09:12:52');
 
 -- --------------------------------------------------------
 
@@ -517,10 +650,20 @@ CREATE TABLE `unit_management` (
   `area` varchar(255) DEFAULT NULL,
   `status` enum('active','inactive') NOT NULL DEFAULT 'active',
   `booking_status` enum('empty','request','review','meeting','booking','agreement') NOT NULL DEFAULT 'empty',
+  `deposite` varchar(255) DEFAULT NULL,
+  `advance_payment` varchar(255) DEFAULT NULL,
+  `quarterly_installments_start_from_the_date` date DEFAULT NULL,
   `branch_id` varchar(255) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Dumping data for table `unit_management`
+--
+
+INSERT INTO `unit_management` (`id`, `project_id`, `floor_management_id`, `name`, `unit_description_id`, `unit_condition_id`, `unit_type_id`, `unit_parking_id`, `view_id`, `price`, `room_counts`, `bath_room_counts`, `ratio`, `area`, `status`, `booking_status`, `deposite`, `advance_payment`, `quarterly_installments_start_from_the_date`, `branch_id`, `created_at`, `updated_at`) VALUES
+(4, 2, 2, 'TEST', NULL, NULL, NULL, NULL, NULL, '1800000', NULL, NULL, NULL, NULL, 'active', 'agreement', '30000', '570000', '2025-09-01', NULL, '2025-08-05 13:56:30', '2025-08-07 09:12:52');
 
 -- --------------------------------------------------------
 
@@ -593,7 +736,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `username`, `password`, `status`, `role_id`, `team_id`, `phone`, `my_name`, `created_at`, `updated_at`) VALUES
 (1, 'admin', NULL, 'admin', '$2y$10$Ov1XETq6f9Yv2Lh5Ir.IbOysOkUj5z9LVXfrP51hJ4c5DGlBkAEpO', 1, 1, NULL, NULL, NULL, '2025-07-30 18:47:08', '2025-08-02 10:24:27'),
-(2, 'e@badawy.e', 'e3@badawy.e', 'eslam', '$2y$10$k6ZRDUnv2JY3jWyBF/RDqef06ZwsrcCrJUEzUgueC8JvaGPFQtula', 1, 1, 1, '01117556204', '123456', '2025-08-03 15:46:52', '2025-08-03 15:59:45');
+(2, 'e@badawy.e', 'e3@badawy.e', 'eslam', '$2y$10$k6ZRDUnv2JY3jWyBF/RDqef06ZwsrcCrJUEzUgueC8JvaGPFQtula', 1, 1, 1, '01117556204', '123456', '2025-08-03 15:46:52', '2025-08-03 15:59:45'),
+(5, 'Employee', NULL, 'employee', '$2y$10$.QYLtpHVccz79SUbkKUWs.y7Rc446CHlOHKAZ/H1NTQB6gBEGudIq', 1, 3, 1, NULL, '12345', '2025-08-07 05:47:24', '2025-08-07 05:47:30');
 
 -- --------------------------------------------------------
 
@@ -632,6 +776,34 @@ ALTER TABLE `admin_roles`
 --
 ALTER TABLE `business_settings`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customers`
+--
+ALTER TABLE `customers`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `customer_logs`
+--
+ALTER TABLE `customer_logs`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_logs_customer_id_foreign` (`customer_id`);
+
+--
+-- Indexes for table `customer_reminders`
+--
+ALTER TABLE `customer_reminders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `customer_reminders_customer_id_foreign` (`customer_id`),
+  ADD KEY `customer_reminders_user_id_foreign` (`user_id`);
+
+--
+-- Indexes for table `employees`
+--
+ALTER TABLE `employees`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `employees_user_id_foreign` (`user_id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -686,6 +858,13 @@ ALTER TABLE `projects`
 --
 ALTER TABLE `property_types`
   ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `schedules`
+--
+ALTER TABLE `schedules`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `schedules_customer_id_foreign` (`customer_id`);
 
 --
 -- Indexes for table `social_media`
@@ -765,13 +944,37 @@ ALTER TABLE `views`
 -- AUTO_INCREMENT for table `admin_roles`
 --
 ALTER TABLE `admin_roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `business_settings`
 --
 ALTER TABLE `business_settings`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=132;
+
+--
+-- AUTO_INCREMENT for table `customers`
+--
+ALTER TABLE `customers`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `customer_logs`
+--
+ALTER TABLE `customer_logs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `customer_reminders`
+--
+ALTER TABLE `customer_reminders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `employees`
+--
+ALTER TABLE `employees`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -795,7 +998,7 @@ ALTER TABLE `floor_management`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
 
 --
 -- AUTO_INCREMENT for table `personal_access_tokens`
@@ -814,6 +1017,12 @@ ALTER TABLE `projects`
 --
 ALTER TABLE `property_types`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `schedules`
+--
+ALTER TABLE `schedules`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `social_media`
@@ -849,7 +1058,7 @@ ALTER TABLE `unit_descriptions`
 -- AUTO_INCREMENT for table `unit_management`
 --
 ALTER TABLE `unit_management`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `unit_parkings`
@@ -867,7 +1076,7 @@ ALTER TABLE `unit_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `views`
@@ -880,11 +1089,36 @@ ALTER TABLE `views`
 --
 
 --
+-- Constraints for table `customer_logs`
+--
+ALTER TABLE `customer_logs`
+  ADD CONSTRAINT `customer_logs_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `customer_reminders`
+--
+ALTER TABLE `customer_reminders`
+  ADD CONSTRAINT `customer_reminders_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `customer_reminders_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `employees`
+--
+ALTER TABLE `employees`
+  ADD CONSTRAINT `employees_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `floor_management`
 --
 ALTER TABLE `floor_management`
   ADD CONSTRAINT `floor_management_floor_id_foreign` FOREIGN KEY (`floor_id`) REFERENCES `floors` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `floor_management_project_id_foreign` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `schedules`
+--
+ALTER TABLE `schedules`
+  ADD CONSTRAINT `schedules_customer_id_foreign` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `unit_management`
