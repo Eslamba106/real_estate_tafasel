@@ -1,19 +1,25 @@
 <?php
+
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\CustomerLog;
-use App\Models\CustomerReminder;
-use App\Models\FloorManagement;
-use App\Models\Project;
-use App\Models\Team;
-use App\Models\UnitManagement;
-use App\Models\User;
-use Brian2694\Toastr\Facades\Toastr;
-use Carbon\Carbon;
 use Exception;
+use Carbon\Carbon;
+use App\Models\Team;
+use App\Models\User;
+use App\Models\Floor;
+use App\Models\Project;
+use App\Models\Customer;
+use App\Models\Employee;
+use App\Models\CustomerLog;
 use Illuminate\Http\Request;
+use App\Models\UnitManagement;
+use App\Models\FloorManagement;
+use App\Imports\CustomersImport;
+use App\Models\CustomerReminder;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use Brian2694\Toastr\Facades\Toastr;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CustomerController extends Controller
 {
@@ -39,7 +45,6 @@ class CustomerController extends Controller
                     }
                 })->where('assign_to_team', $user->team_id)->where('booking_status', '!=', 'agreement')
                     ->latest()->paginate()->appends($query_param);
-
             } elseif ($user->role_id == 3) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
@@ -63,7 +68,7 @@ class CustomerController extends Controller
                         ->orWhere('booking_status', 'booking')
                         ->orWhere('booking_status', 'agreement');
                 })
-                // ->whereDate('assign_date', '<=', Carbon::now()->subDays(14))->orWhere('assign_date' , null)->orWhere('booking_status' , 'agreement')
+                    // ->whereDate('assign_date', '<=', Carbon::now()->subDays(14))->orWhere('assign_date' , null)->orWhere('booking_status' , 'agreement')
                     ->latest()->paginate()->appends($query_param);
             }
         }
@@ -89,6 +94,25 @@ class CustomerController extends Controller
         ];
         return view("admin-views.crm.customers.create", $data);
     }
+    public function edit($id)
+    {
+        $customer = Customer::findOrFail($id);
+        $projects = Project::select('id', 'name')->get();
+        $teams    = Team::select('id', 'name')->get();
+
+        $floors = FloorManagement::select('id', 'floor_id', 'project_id')->where('project_id', $customer->project_id)->get();
+        $units  = UnitManagement::select('id', 'floor_management_id', 'name', 'project_id')->where('floor_management_id', $customer->floor_id)->get();
+
+        $data = [
+            "customer" => $customer,
+            "projects" => $projects,
+            "teams"    => $teams,
+            "floors"  => $floors,
+            "units"   => $units,
+        ];
+
+        return view("admin-views.crm.customers.edit", $data);
+    }
 
     public function store(Request $request)
     {
@@ -103,7 +127,7 @@ class CustomerController extends Controller
             'budget'     => 'nullable|numeric',
         ]);
         DB::beginTransaction();
-        try { 
+        try {
             $customer = Customer::create([
                 'name'           => $request->name,
                 'phone'          => $request->phone,
@@ -147,6 +171,73 @@ class CustomerController extends Controller
             Toastr::success(translate('added_successfully'));
             DB::commit();
             return to_route('customer.index')->with('success', translate('added_successfully'));
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return back()->with('error', $ex->getMessage())->withInput();
+        }
+    }
+    public function update(Request $request, $id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'       => 'required|string|max:255',
+            'phone'      => 'required|string|max:20|unique:customers,phone,' . $customer->id,
+            'email'      => 'nullable|email|max:255',
+            'job'        => 'nullable|string|max:255',
+            'project_id' => 'nullable|exists:projects,id',
+            'floor_id'   => 'nullable',
+            'unit_id'    => 'nullable',
+            'budget'     => 'nullable|numeric',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            // تحديث بيانات العميل
+            $customer->update([
+                'name'           => $request->name,
+                'phone'          => $request->phone,
+                'email'          => $request->email,
+                'job'            => $request->job,
+                'project_id'     => $request->project_id,
+                'floor_id'       => $request->floor_id,
+                'unit_id'        => $request->unit_id,
+                'budget'         => $request->budget,
+                'assign_to'      => $request->employee_id ?? $customer->assign_to,
+                'assign_to_team' => $request->team_id ?? $customer->assign_to_team,
+            ]);
+
+            if ($request->assign_note) {
+                CustomerLog::create([
+                    'customer_id' => $customer->id,
+                    'date'        => today(),
+                    'time'        => now(),
+                    'activity'    => 'assign to',
+                    'notes'       => $request->assign_note,
+                    'user_id'     => auth()->id(),
+                ]);
+            }
+
+            if ($request->reminder_at) {
+                CustomerReminder::create([
+                    'customer_id' => $customer->id,
+                    'user_id'     => auth()->id(),
+                    'note'        => $request->reminder_note,
+                    'reminder_at' => $request->reminder_at,
+                ]);
+                CustomerLog::create([
+                    'customer_id' => $customer->id,
+                    'date'        => today(),
+                    'time'        => now(),
+                    'activity'    => 'add_reminder',
+                    'notes'       => $request->reminder_note,
+                    'user_id'     => auth()->id(),
+                ]);
+            }
+
+            DB::commit();
+            Toastr::success(translate('updated_successfully'));
+            return to_route('customer.index')->with('success', translate('updated_successfully'));
         } catch (Exception $ex) {
             DB::rollBack();
             return back()->with('error', $ex->getMessage())->withInput();
@@ -213,5 +304,35 @@ class CustomerController extends Controller
             'units'   => $units,
         ]);
     }
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,csv,xls'
+        ]);
 
+        Excel::import(new CustomersImport, $request->file('file'));
+
+        return redirect()->back()->with('success', translate('imported_successfully'));
+    }
+
+    public function delete(Request $request)
+    {
+        $id = $request->id;
+
+        DB::beginTransaction();
+        try {
+            $customer = Customer::findOrFail($id);
+            CustomerReminder::where('customer_id', $customer->id)->delete();
+            CustomerLog::where('customer_id', $customer->id)->delete();
+
+            $customer->delete();
+
+            DB::commit();
+            Toastr::success(translate('deleted_successfully'));
+            return back()->with('success', translate('deleted_successfully'));
+        } catch (Exception $ex) {
+            DB::rollBack();
+            return back()->with('error', $ex->getMessage());
+        }
+    }
 }

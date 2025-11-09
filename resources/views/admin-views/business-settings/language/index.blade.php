@@ -13,6 +13,7 @@
             </h2>
         </div>
         <!-- End Page Title -->
+        @include('admin-views.inline_menu.settings.inline-menu')
 
         <!-- Inlile Menu -->
         {{-- @include('admin-views.business-settings.system-settings-inline-menu') --}}

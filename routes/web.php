@@ -45,6 +45,30 @@ Route::group(['prefix' => 'auth'], function () {
 Route::get('dashboard', function () {
     return view('dashboard');
 })->middleware('auth')->name('dashboard');
+// Sidebar Master 
+
+Route::get('unit-master', function () {
+    return view('sidebar.unit_master');
+})->middleware('auth')->name('unit-master');
+
+Route::get('project_management', function () {
+    return view('sidebar.project_management');
+})->middleware('auth')->name('project_management');
+
+Route::get('user_management', function () {
+    return view('sidebar.user_management');
+})->middleware('auth')->name('user_management');
+
+Route::get('crm', function () {
+    return view('sidebar.crm');
+})->middleware('auth')->name('crm');
+
+
+Route::get('settings', function () {
+    return view('sidebar.settings');
+})->middleware('auth')->name('settings');
+Route::post('/customers/import', [CustomerController::class, 'import'])->name('customers.import');
+
 
 // Unit Description
 Route::group(['prefix' => 'unit_description', 'middleware' => ['auth']], function () {

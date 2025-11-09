@@ -7,13 +7,9 @@
         @if (\App\Helpers\Helpers::module_permission_check('employees'))
             <li class="{{ Request::is('employees*') ? 'active' : '' }}"><a
                     href="{{ route('employee.index') }}">{{ translate('employees') }}</a></li>
-        @endif
-        @if (\App\Helpers\Helpers::module_permission_check('customers'))
-            <li class="{{ Request::is('customers*') ? 'active' : '' }}"><a
-                    href="{{ route('customer.index') }}">{{ translate('customers') }}</a></li>
-        @endif
+        @endif 
         @if (\App\Helpers\Helpers::module_permission_check('roles'))
-            <li class="{{ Request::is('roles*') ? 'active' : '' }}"><a
+            <li class="{{ Request::is('custom-role*') ? 'active' : '' }}"><a
                     href="{{ route('role_admin.role_list') }}">{{ translate('roles') }}</a></li>
         @endif
 

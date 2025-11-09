@@ -326,7 +326,7 @@ class LanguageController extends Controller
         }
         session()->forget('language_settings');
         Helpers::language_load();
-        session()->put('local', $local);
+        session()->put('locale', $local);
         Session::put('direction', $direction);
         return redirect()->back();
     }

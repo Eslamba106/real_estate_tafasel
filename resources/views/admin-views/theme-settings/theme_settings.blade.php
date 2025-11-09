@@ -9,6 +9,7 @@
 @endpush
 
 @section('content')
+
     <div class="content container-fluid">
         <!-- Page Title -->
         <div class="d-flex justify-content-between align-items-center gap-3 mb-3">
@@ -41,7 +42,7 @@
         <!-- End Page Title -->
 
         <!-- Inlile Menu -->
-        @include('admin-views.business-settings.business-setup-inline-menu')
+        @include('admin-views.inline_menu.settings.inline-menu')
         <!-- End Inlile Menu -->
 
         <div class="alert alert-danger d-none mb-3" role="alert">

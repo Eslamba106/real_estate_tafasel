@@ -33,7 +33,7 @@
             </h2>
         </div>
         <!-- End Page Title -->
-        @include('admin-views.inline_menu.team_master.inline-menu')
+        @include('admin-views.inline_menu.crm.inline-menu')
 
         <!-- Form -->
         <form class="product-form text-start" action="{{ route('customer.store') }}" method="POST"
@@ -53,7 +53,7 @@
                                 <label for="name" class="title-color">{{ translate('name') }}<span class="text-danger">
                                         *</span>
                                 </label>
-                                <input type="text" class="form-control" name="name" value="{{ old('name') }}">
+                                <input type="text" class="form-control" name="name" required value="{{ old('name') }}">
                                 @error('name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -66,7 +66,7 @@
                                 <label for="name" class="title-color">{{ translate('phone') }} <span
                                         class="text-danger">
                                         *</span></label>
-                                <input type="text" class="form-control" name="phone" value="{{ old('phone') }}">
+                                <input type="text" class="form-control" name="phone" required value="{{ old('phone') }}">
                                 @error('phone')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -101,7 +101,7 @@
                                         class="text-danger"> *</span>
                                 </label>
                                 <select class="js-select2-custom form-control" onchange="units(this)" name="floor_id"
-                                    required>
+                                     >
                                     <option value="" selected>{{ translate('select') }}</option>
 
                                 </select>
@@ -117,7 +117,7 @@
                                 <label for="code" class="title-color">{{ translate('unit') }}<span class="text-danger">
                                         *</span>
                                 </label>
-                                <select class="js-select2-custom form-control" name="unit_id" required>
+                                <select class="js-select2-custom form-control" name="unit_id"  >
                                     <option value="" selected>{{ translate('select') }}</option>
 
                                 </select>

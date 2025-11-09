@@ -16,7 +16,7 @@
             </h2>
         </div>
         <!-- End Page Title -->
-        @include('admin-views.inline_menu.team_master.inline-menu')
+        @include('admin-views.inline_menu.crm.inline-menu')
 
         <div class="row mt-20">
             <div class="col-md-12">

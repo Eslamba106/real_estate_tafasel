@@ -16,7 +16,7 @@
         </div>
         <!-- End Page Title -->
 
-
+        @include('admin-views.inline_menu.team_master.inline-menu')
 
         <div class="card mt-3">
             <div class="px-3 py-4">

@@ -15,8 +15,9 @@
                 <span class="badge badge-soft-dark radius-50 fz-14 ml-1">{{ $main->total() }}</span>
             </h2>
         </div>
+
         <!-- End Page Title -->
-        @include('admin-views.inline_menu.team_master.inline-menu')
+        @include('admin-views.inline_menu.crm.inline-menu')
 
         <div class="row mt-20">
             <div class="col-md-12">
@@ -47,6 +48,13 @@
                                     <a href="{{ route('customer.create') }}" class="btn btn--primary">
                                         <i class="tio-add"></i>
                                         <span class="text">{{ translate('create_customer') }}</span>
+                                    </a>
+                                @endif
+                                @if (\App\Helpers\Helpers::module_permission_check('add_customer'))
+                                    <a class="btn btn--primary" data-assign_to="" data-toggle="modal"
+                                        data-target="#import_excel">
+                                        <i class="tio-file"></i>
+                                        <span class="text">{{ translate('import_Excel') }}</span>
                                     </a>
                                 @endif
                             </div>
@@ -92,8 +100,8 @@
                                             </td>
                                         @endif
                                         <td class="text-center">
-                                                {{ $customer_item->booking_status ?? translate('not_available') }}
-                                            </td>
+                                            {{ $customer_item->booking_status ?? translate('not_available') }}
+                                        </td>
                                         <td>
                                             <div class="d-flex justify-content-center gap-2">
 
@@ -136,7 +144,7 @@
                                                         data-id="{{ $customer_item['id'] }}"><i
                                                             class="fas fa-plus"></i></button>
                                                 @endif
-                                                @if (\App\Helpers\Helpers::module_permission_check('assign_to') && $customer_item['booking_status'] != 'agreement' )
+                                                @if (\App\Helpers\Helpers::module_permission_check('assign_to') && $customer_item['booking_status'] != 'agreement')
                                                     <button type="button" id="assign_to_employee"
                                                         class="btn   btn-outline-primary  " data-assign_to=""
                                                         data-toggle="modal" data-target="#assign_to"
@@ -175,7 +183,6 @@
             </div>
         </div>
     </div>
-
     <div class="modal fade" id="assign_to" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
@@ -256,34 +263,64 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="add_new_action" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="assign_to" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
-                        {{ translate('add_new_action') }}</h5>
+                        {{ translate('assign_to') }}</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('customer.add_customer_log') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('customer.assign_to') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="card-body">
                             <div class="row">
                                 <!-- Department Select -->
-                                <input type="hidden" name="customer_id_add_action">
+                                <input type="hidden" name="customer_id_assign_to">
 
                                 <div class="col-md-6 col-lg-6 col-xl-6">
                                     <div class="form-group">
-                                        <label for="" class="form-control-label">{{ translate('title') }}
+                                        <label for="code" class="title-color">{{ translate('teams') }}<span
+                                                class="text-danger">
+                                                *</span>
                                         </label>
-                                        <input type="text" class="form-control main_date" name="activity">
+                                        <select class="js-select2-custom form-control" onchange="employee(this)"
+                                            name="team_id" required>
+                                            <option value="">{{ translate('select') }}</option>
+                                            @foreach ($teams as $team)
+                                                <option value="{{ $team->id }}">{{ $team->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
+                                    @error('team_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6 col-lg-6 col-xl-6">
+                                    <div class="form-group">
+                                        <label for="code" class="title-color">{{ translate('employee') }}<span
+                                                class="text-danger"> *</span>
+                                        </label>
+                                        <select class="js-select2-custom form-control" name="employee_id" required>
+                                            <option value="" selected>{{ translate('select') }}</option>
+
+                                        </select>
+                                    </div>
+                                    @error('employee_id')
+                                        <div class="invalid-feedback">
+                                            {{ $message }}
+                                        </div>
+                                    @enderror
                                 </div>
 
-                                <div class="col-md-6 col-lg-6 col-xl-6">
+                                <div class="col-md-6 col-lg-12 col-xl-12">
                                     <div class="form-group">
                                         <label for="" class="form-control-label">{{ translate('remark') }}
                                         </label>
@@ -299,6 +336,42 @@
                             <button value="update_department" name="bulk_action_btn" type="submit"
                                 class="btn btn--primary w-100">
                                 {{ translate('add') }}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="import_excel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        {{ translate('import_excel') }}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('customers.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 col-lg-6 col-xl-6">
+                                    <input type="file" name="file" required>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button value="update_department" name="bulk_action_btn" type="submit"
+                                class="btn btn--primary w-100">
+                                {{ translate('Import') }}
                             </button>
                         </div>
                     </div>
