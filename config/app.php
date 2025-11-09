@@ -54,13 +54,13 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost:8080/real_estate_tafasel/'),
+    // 'url' => env('APP_URL', 'http://localhost:8080/real_estate_tafasel/'),
 
-    'asset_url' => 'http://localhost:8080/real_estate_tafasel/public/',
+    // 'asset_url' => 'http://localhost:8080/real_estate_tafasel/public/',
 
-    // 'url' => env('APP_URL', 'https://dev.y-codex.org/'),
+    'url' => env('APP_URL', 'https://dev.y-codex.org/'),
 
-    // 'asset_url' => 'https://dev.y-codex.org/public/',
+    'asset_url' => 'https://dev.y-codex.org/public/',
 
     /*
     |--------------------------------------------------------------------------
