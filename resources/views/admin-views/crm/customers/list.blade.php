@@ -112,18 +112,20 @@
                                                         <i class="tio-edit"></i>
                                                     </a>
                                                 @endif
-                                                {{-- @if (\App\Helpers\Helpers::module_permission_check('edit_customer')) --}}
-                                                <a class="btn btn-outline--primary btn-sm square-btn"
-                                                    title="{{ translate('actions') }}"
-                                                    href="{{ route('customer.customer_logs', [$customer_item->id]) }}">
-                                                    <i class="fas fa-history"></i>
-                                                </a>
-                                                <a class="btn btn-outline--primary btn-sm square-btn"
-                                                    title="{{ translate('installments') }}"
-                                                    href="{{ route('customer.installments', [$customer_item->id]) }}">
-                                                    <i class="fas fa-list"></i>
-                                                </a>
-                                                {{-- @endif --}}
+                                                @if (\App\Helpers\Helpers::module_permission_check('edit_customer'))
+                                                    <a class="btn btn-outline--primary btn-sm square-btn"
+                                                        title="{{ translate('actions') }}"
+                                                        href="{{ route('customer.customer_logs', [$customer_item->id]) }}">
+                                                        <i class="fas fa-history"></i>
+                                                    </a>
+                                                @endif
+                                                @if (\App\Helpers\Helpers::module_permission_check('installments_customer'))
+                                                    <a class="btn btn-outline--primary btn-sm square-btn"
+                                                        title="{{ translate('installments') }}"
+                                                        href="{{ route('customer.installments', [$customer_item->id]) }}">
+                                                        <i class="fas fa-list"></i>
+                                                    </a>
+                                                @endif
                                                 @if (\App\Helpers\Helpers::module_permission_check('delete_customer'))
                                                     <a class="btn btn-outline-danger btn-sm delete square-btn"
                                                         title="{{ translate('delete') }}" id="{{ $customer_item->id }}">
@@ -183,7 +185,7 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="assign_to" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="add_new_action" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
@@ -194,58 +196,27 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('customer.assign_to') }}" method="POST" enctype="multipart/form-data">
+                <form action="{{ route('customer.add_customer_log') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body">
                         <div class="card-body">
-                            <div class="row">
-                                <!-- Department Select -->
-                                <input type="hidden" name="customer_id_assign_to">
-
-                                <div class="col-md-6 col-lg-6 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="code" class="title-color">{{ translate('teams') }}<span
-                                                class="text-danger">
-                                                *</span>
-                                        </label>
-                                        <select class="js-select2-custom form-control" onchange="employee(this)"
-                                            name="team_id" required>
-                                            <option value="">{{ translate('select') }}</option>
-                                            @foreach ($teams as $team)
-                                                <option value="{{ $team->id }}">{{ $team->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @error('team_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                            <div class="row"> 
+                                <input type="hidden" name="customer_id_add_action">
+ 
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="form-group">
+                                            <label for="" class="form-control-label">{{ translate('title') }}
+                                            </label>
+                                            <input type="text" class="form-control main_date" name="activity">
                                         </div>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6 col-lg-6 col-xl-6">
-                                    <div class="form-group">
-                                        <label for="code" class="title-color">{{ translate('employee') }}<span
-                                                class="text-danger"> *</span>
-                                        </label>
-                                        <select class="js-select2-custom form-control" name="employee_id" required>
-                                            <option value="" selected>{{ translate('select') }}</option>
-
-                                        </select>
                                     </div>
-                                    @error('employee_id')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
 
-                                <div class="col-md-6 col-lg-12 col-xl-12">
-                                    <div class="form-group">
-                                        <label for="" class="form-control-label">{{ translate('remark') }}
-                                        </label>
-                                        <textarea class="form-control" cols="30" rows="2" name="note"></textarea>
-                                    </div>
+                                    <div class="col-md-12 col-lg-12 col-xl-12">
+                                        <div class="form-group">
+                                            <label for="" class="form-control-label">{{ translate('remark') }}
+                                            </label>
+                                            <textarea class="form-control" cols="30" rows="2" name="action_note"></textarea>
+                                        </div> 
                                 </div>
                             </div>
                         </div>

@@ -34,7 +34,7 @@ class CustomerController extends Controller
         // }
         $search      = $request['search'];
         $query_param = $search ? ['search' => $request['search']] : '';
-        if (auth()->check()) {
+        if (auth()->check()) { 
             $user = auth()->user();
             if ($user->role_id == 2) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
@@ -70,9 +70,19 @@ class CustomerController extends Controller
                 })
                     // ->whereDate('assign_date', '<=', Carbon::now()->subDays(14))->orWhere('assign_date' , null)->orWhere('booking_status' , 'agreement')
                     ->latest()->paginate()->appends($query_param);
+            }else{
+                $customers = Customer::where('added_by' , $user->id)->when($request['search'], function ($q) use ($request) {
+                    $key = explode(' ', $request['search']);
+                    foreach ($key as $value) {
+                        $q->Where('name', 'like', "%{$value}%")
+                            ->orWhere('id', $value);
+                    }
+                })
+                    ->latest()->paginate()->appends($query_param);
             }
         }
         $teams = Team::select('id', 'name')->get();
+         
         $data  = [
             'main'   => $customers,
             'search' => $search,

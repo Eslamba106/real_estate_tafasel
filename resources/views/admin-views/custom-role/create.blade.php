@@ -852,12 +852,12 @@
 
                                 <div class="card-body">
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="show_all_customer"
-                                            value="show_all_customer"
+                                        <input type="checkbox" name="modules[]" id="show_all_customers"
+                                            value="show_all_customers"
                                             class="form-check-input section-child module-permission">
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
-                                            for="show_all_customer">
+                                            for="show_all_customers">
                                             {{ translate('show_all_customers') }}
                                         </label>
                                     </div>

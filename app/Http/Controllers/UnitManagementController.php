@@ -71,7 +71,7 @@ class UnitManagementController extends Controller
                 'floor'                         => 'required',
                 'name'                          => 'required', 
             ]);
-DB::beginTransaction();
+        DB::beginTransaction();
         try {
             $unit_management = UnitManagement::create([
                 'project_id'                                    => $request->project,
@@ -87,6 +87,12 @@ DB::beginTransaction();
                 'bath_room_counts'                              => $request->bath_room_counts,
                 'ratio'                                         => $request->ratio,
                 'area'                                          => $request->area,
+                'installment'                                   => $request->installment,
+                'payment_mode'                                  => $request->payment_mode,
+                'cash'                                          => $request->cash,
+                'down_payment'                                  => $request->down_payment,
+                'maintenance'                                   => $request->maintenance,
+
             ]);
                 Toastr::success(translate('added_successfully'));
 
@@ -146,6 +152,11 @@ DB::beginTransaction();
                 'bath_room_counts'                              => $request->bath_room_counts,
                 'ratio'                                         => $request->ratio,
                 'area'                                          => $request->area,
+                'installment'                                   => $request->installment,
+                'payment_mode'                                  => $request->payment_mode,
+                'cash'                                          => $request->cash,
+                'down_payment'                                  => $request->down_payment,
+                'maintenance'                                   => $request->maintenance,
             ]);
                 Toastr::success(translate('updated_successfully'));
             return redirect()->route('unit_management.index')->with('success', translate('added_successfully'));

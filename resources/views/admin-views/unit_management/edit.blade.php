@@ -162,11 +162,43 @@
                                 <label>{{ translate('bath_room_counts' ) }}</label>
                                 <input name="bath_room_counts" type="number"  value="{{ $selected_unit->bath_room_counts }}" class=" form-control"/> 
                             </div>
+                        </div> 
+                          <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="form-group">
+                                <label>{{ translate('net_Area') }}</label>
+                                <input name="ratio" type="number"  value="{{ $selected_unit->ratio }}" class=" form-control" />
+                            </div>
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3">
                             <div class="form-group">
-                                <label>{{ translate('ratio' ) }} %</label>
-                                <input name="ratio" type="number"  value="{{ $selected_unit->ratio }}" class=" form-control"/> 
+                                <label>{{ translate('down_Payment') }}</label>
+                                <input name="down_payment" type="number"  value="{{ $selected_unit->down_payment }}" class=" form-control" />
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="form-group">
+                                <label for="area-measurement">{{ translate('payment_mode') }} </label>
+                                <select id="area-measurement" name="payment_mode" class="js-select2-custom form-control">
+                                    <option value=""   >{{ translate('select_payment_mode') }}</option>
+                                    <option value="1"   @if($selected_unit->payment_mode ==  1 ) selected @endif >{{ translate('monthly') }}</option>
+                                    <option value="2"   @if($selected_unit->payment_mode == 2 ) selected @endif >{{ translate('bi_monthly') }}</option>
+                                    <option value="3"   @if($selected_unit->payment_mode ==  3 ) selected @endif >{{ translate('quarterly') }}</option>
+                                    <option value="4"   @if($selected_unit->payment_mode ==  4 ) selected @endif >{{ translate('half_yearly') }}</option>
+                                    <option value="5"   @if($selected_unit->payment_mode ==  5 ) selected @endif >{{ translate('yearly') }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="form-group">
+                                <label>{{ translate('installment') }}</label>
+                                <input name="installment" type="number" value="{{ $selected_unit->installment }}" class=" form-control" />
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6 col-lg-4 col-xl-3">
+                            <div class="form-group">
+                                <label>{{ translate('maintenance') }}</label>
+                                <input name="maintenance" type="number" value="{{ $selected_unit->maintenance }}" class=" form-control" />
                             </div>
                         </div>
                         <div class="col-md-6 col-lg-4 col-xl-3">
