@@ -24,7 +24,7 @@
                 <form id="submit-edit-role" method="post" action="{{ route('role_admin.update', ['id' => $role->id]) }}"
                     style="text-align: {{ Session::get('direction') === 'rtl' ? 'right' : 'left' }};">
 
-                    @csrf 
+                    @csrf
 
                     <div class="row">
                         <div class="col-lg-6">
@@ -34,11 +34,33 @@
                                     value="{{ old('name', $role->name) }}"
                                     placeholder="{{ translate('ex') }} : {{ translate('store') }}" required>
                             </div>
+                        </div> 
+                    </div>
+
+                    <div class="d-flex gap-4 flex-wrap">
+                        <label for="is_admin"
+                            class="title-color font-weight-bold mb-0">{{ translate('is_admin') }}
+                        </label>
+                        <div class="form-group d-flex gap-2">
+                            <input value="1" type="checkbox" name="is_admin" {{ $role->is_admin == 1 ? 'checked' : '' }} class="cursor-pointer">
+                            <label class="title-color mb-0 cursor-pointer"
+                                for="is_admin" >{{ translate('is_admin') }}</label>
+                        </div>
+                    </div> 
+                    <div class="d-flex gap-4 flex-wrap">
+                        <label for="is_team_leader"
+                            class="title-color font-weight-bold mb-0">{{ translate('is_team_leader') }}
+                        </label>
+                        <div class="form-group d-flex gap-2">
+                            <input value="1" type="checkbox"  @checked($role->is_team_leader == 1) name="is_team_leader"  class="cursor-pointer">
+                            <label class="title-color mb-0 cursor-pointer"
+                                for="is_team_leader">{{ translate('is_team_leader') }}</label>
                         </div>
                     </div>
 
                     <div class="d-flex gap-4 flex-wrap">
-                        <label for="name" class="title-color font-weight-bold mb-0">{{ translate('module_permission') }}
+                        <label for="name"
+                            class="title-color font-weight-bold mb-0">{{ translate('module_permission') }}
                         </label>
                         <div class="form-group d-flex gap-2">
                             <input type="checkbox" id="select_all" class="cursor-pointer">
@@ -486,13 +508,14 @@
                             </div>
                         </div>
 
-                        
 
-                          <div class="section-card   col-4 col-md-6 col-lg-4 mt-3">
+
+                        <div class="section-card   col-4 col-md-6 col-lg-4 mt-3">
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="projects" value="projects"
-                                        class="form-check-input mt-0 section-parent module-permission" {{ is_checked('projects', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('projects', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="projects">
@@ -504,7 +527,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="show_all_project"
                                             value="show_all_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_project', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_project">
@@ -512,9 +536,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="show_project"
-                                            value="show_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_project', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="show_project" value="show_project"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_project">
@@ -523,7 +547,8 @@
                                     </div>
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="add_project" value="add_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_project', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_project">
@@ -532,7 +557,8 @@
                                     </div>
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="edit_project" value="edit_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_project', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_project">
@@ -542,7 +568,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="delete_project"
                                             value="delete_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_project', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_project">
@@ -552,7 +579,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_project"
                                             value="change_status_project"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_project', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_project', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_project">
@@ -567,7 +595,8 @@
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="floor_management"
                                         value="floor_management"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('floor_management', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('floor_management', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="floor_management">
@@ -579,7 +608,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="show_all_floor_management"
                                             value="show_all_floor_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_floor_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_floor_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_floor_management">
@@ -589,7 +619,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="add_floor_management"
                                             value="add_floor_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_floor_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_floor_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_floor_management">
@@ -599,7 +630,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="edit_floor_management"
                                             value="edit_floor_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_floor_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_floor_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_floor_management">
@@ -609,7 +641,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="delete_floor_management"
                                             value="delete_floor_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_floor_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_floor_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_floor_management">
@@ -619,7 +652,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_floor_management"
                                             value="change_status_floor_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_floor_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_floor_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_floor_management">
@@ -633,7 +667,8 @@
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="unit_management" value="unit_management"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('unit_management', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('unit_management', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="unit_management">
@@ -645,7 +680,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="show_all_unit_management"
                                             value="show_all_unit_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_unit_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_unit_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_unit_management">
@@ -655,7 +691,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="add_unit_management"
                                             value="add_unit_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_unit_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_unit_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_unit_management">
@@ -665,7 +702,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="edit_unit_management"
                                             value="edit_unit_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_unit_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_unit_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_unit_management">
@@ -675,7 +713,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="delete_unit_management"
                                             value="delete_unit_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_unit_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_unit_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_unit_management">
@@ -685,7 +724,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_unit_management"
                                             value="change_status_unit_management"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_unit_management', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_unit_management', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_unit_management">
@@ -699,7 +739,8 @@
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="team" value="team"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('team', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('team', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="team">
@@ -709,9 +750,9 @@
 
                                 <div class="card-body">
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="show_all_team"
-                                            value="show_all_team"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_team', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="show_all_team" value="show_all_team"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_team', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_team">
@@ -719,9 +760,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="add_team"
-                                            value="add_team"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_team', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="add_team" value="add_team"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_team', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_team">
@@ -729,9 +770,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="edit_team"
-                                            value="edit_team"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_team', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="edit_team" value="edit_team"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_team', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_team">
@@ -739,9 +780,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="delete_team"
-                                            value="delete_team"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_team', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="delete_team" value="delete_team"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_team', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_team">
@@ -751,7 +792,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_team"
                                             value="change_status_team"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_team', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_team', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_team">
@@ -765,7 +807,8 @@
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="employee" value="employee"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('employee', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('employee', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="employee">
@@ -777,7 +820,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="show_all_employee"
                                             value="show_all_employee"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_employee', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_employee', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_employee">
@@ -785,9 +829,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="add_employee"
-                                            value="add_employee"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_employee', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="add_employee" value="add_employee"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_employee', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_employee">
@@ -795,9 +839,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="edit_employee"
-                                            value="edit_employee"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_employee', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="edit_employee" value="edit_employee"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_employee', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_employee">
@@ -807,7 +851,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="delete_employee"
                                             value="delete_employee"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_employee', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_employee', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_employee">
@@ -817,7 +862,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_employee"
                                             value="change_status_employee"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_employee', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_employee', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_employee">
@@ -831,7 +877,8 @@
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="role" value="role"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('role', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('role', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="role">
@@ -841,9 +888,9 @@
 
                                 <div class="card-body">
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="show_all_role"
-                                            value="show_all_role"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_role', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="show_all_role" value="show_all_role"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_role', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_role">
@@ -851,9 +898,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="add_role"
-                                            value="add_role"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_role', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="add_role" value="add_role"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_role', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_role">
@@ -861,9 +908,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="edit_role"
-                                            value="edit_role"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_role', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="edit_role" value="edit_role"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_role', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_role">
@@ -871,9 +918,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="delete_role"
-                                            value="delete_role"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_role', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="delete_role" value="delete_role"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_role', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_role">
@@ -883,7 +930,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_role"
                                             value="change_status_role"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_role', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_role', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_role">
@@ -897,7 +945,8 @@
                             <div class="card card-primary section-box">
                                 <div class="card-header">
                                     <input type="checkbox" name="modules[]" id="customer" value="customer"
-                                        class="form-check-input mt-0 section-parent module-permission"  {{ is_checked('customer', $module_access) }}>
+                                        class="form-check-input mt-0 section-parent module-permission"
+                                        {{ is_checked('customer', $module_access) }}>
                                     <label
                                         class="form-check-label font-16 font-weight-bold cursor-pointer {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                         for="customer">
@@ -909,7 +958,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="show_all_customers"
                                             value="show_all_customers"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('show_all_customers', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('show_all_customers', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="show_all_customers">
@@ -917,9 +967,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="add_customer"
-                                            value="add_customer"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_customer', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="add_customer" value="add_customer"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_customer', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_customer">
@@ -927,9 +977,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="edit_customer"
-                                            value="edit_customer"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('edit_customer', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="edit_customer" value="edit_customer"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('edit_customer', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="edit_customer">
@@ -939,7 +989,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="delete_customer"
                                             value="delete_customer"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('delete_customer', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('delete_customer', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="delete_customer">
@@ -947,9 +998,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="assign_to"
-                                            value="assign_to"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('assign_to', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="assign_to" value="assign_to"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('assign_to', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="assign_to">
@@ -957,9 +1008,9 @@
                                         </label>
                                     </div>
                                     <div class="form-check mt-1">
-                                        <input type="checkbox" name="modules[]" id="add_reminder"
-                                            value="add_reminder"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('add_reminder', $module_access) }}>
+                                        <input type="checkbox" name="modules[]" id="add_reminder" value="add_reminder"
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('add_reminder', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="add_reminder">
@@ -969,7 +1020,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="change_status_customer"
                                             value="change_status_customer"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('change_status_customer', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('change_status_customer', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="change_status_customer">
@@ -979,7 +1031,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="accept_installment"
                                             value="accept_installment"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('accept_installment', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('accept_installment', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="accept_installment">
@@ -989,7 +1042,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="installments_customer"
                                             value="installments_customer"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('installments_customer', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('installments_customer', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="installments_customer">
@@ -999,7 +1053,8 @@
                                     <div class="form-check mt-1">
                                         <input type="checkbox" name="modules[]" id="all_installments"
                                             value="all_installments"
-                                            class="form-check-input section-child module-permission"  {{ is_checked('all_installments', $module_access) }}>
+                                            class="form-check-input section-child module-permission"
+                                            {{ is_checked('all_installments', $module_access) }}>
                                         <label
                                             class="form-check-label cursor-pointer mt-0 {{ session()->get('locale') == 'en' ? '' : 'mr-4' }}"
                                             for="all_installments">
@@ -1070,6 +1125,5 @@
             checkbox_selection_check();
         });
     </script>
-        <script src="{{ asset(main_path() . 'js/roles.min.js') }}"></script>
-
+    <script src="{{ asset(main_path() . 'js/roles.min.js') }}"></script>
 @endpush

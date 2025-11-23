@@ -44,22 +44,24 @@ class CustomRoleController extends Controller
         ], [
             'name.required' => 'Role name is required!'
         ]);
-        
+
         DB::table('admin_roles')->insert([
-            'name' => $request->name,
-            'module_access' => json_encode($request['modules']),
-            'status' => 1,
-            'created_at' => now(),
-            'updated_at' => now()
+            'name'              => $request->name,
+            'is_admin'          => $request->is_admin ?? 0,
+            'is_team_leader'    => $request->is_team_leader ?? 0,
+            'module_access'     => json_encode($request['modules']),
+            'status'            => 1,
+            'created_at'        => now(),
+            'updated_at'        => now()
         ]);
 
         Toastr::success(translate('role_added_successfully'));
-        return redirect()->route('role_admin.role_list')->with('success' , translate('role_added_successfully'));
+        return redirect()->route('role_admin.role_list')->with('success', translate('role_added_successfully'));
     }
 
     public function edit($id)
     {
-        $role = AdminRole::where(['id' => $id])->first(['id', 'name', 'module_access']);
+        $role = AdminRole::where(['id' => $id])->first(['id', 'name', 'module_access' , 'is_admin', 'is_team_leader']);
         return view('admin-views.custom-role.edit', compact('role'));
     }
 
@@ -74,6 +76,8 @@ class CustomRoleController extends Controller
         DB::table('admin_roles')->where(['id' => $id])->update([
             'name' => $request->name,
             'module_access' => json_encode($request['modules']),
+            'is_admin'          => $request->is_admin ?? 0,
+            'is_team_leader'    => $request->is_team_leader ?? 0,
             'status' => 1,
             'updated_at' => now()
         ]);

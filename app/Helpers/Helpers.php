@@ -58,7 +58,7 @@ class Helpers
             $user_role  = auth()->user()->role;
             $permission = $user_role->module_access;
 
-            if (auth()->user()->role_id == 1) {
+            if (auth()->user()->role_id == 1 || auth()->user()->is_admin == 1) {
                 return true;
             }
 

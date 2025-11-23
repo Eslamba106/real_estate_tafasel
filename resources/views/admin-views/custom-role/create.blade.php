@@ -34,6 +34,27 @@
                     </div>
 
                     <div class="d-flex gap-4 flex-wrap">
+                        <label for="is_admin"
+                            class="title-color font-weight-bold mb-0">{{ translate('is_admin') }}
+                        </label>
+                        <div class="form-group d-flex gap-2">
+                            <input value="1" type="checkbox" name="is_admin"  class="cursor-pointer">
+                            <label class="title-color mb-0 cursor-pointer"
+                                for="is_admin"> {{ translate('is_admin') }}</label>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-4 flex-wrap">
+                        <label for="is_team_leader"
+                            class="title-color font-weight-bold mb-0">{{ translate('is_team_leader') }}
+                        </label>
+                        <div class="form-group d-flex gap-2">
+                            <input value="1" type="checkbox" name="is_team_leader"  class="cursor-pointer">
+                            <label class="title-color mb-0 cursor-pointer"
+                                for="is_team_leader" >{{ translate('is_team_leader') }}</label>
+                        </div>
+                    </div>
+                    <div class="d-flex gap-4 flex-wrap">
                         <label for="name" class="title-color font-weight-bold mb-0">{{ translate('module_permission') }}
                         </label>
                         <div class="form-group d-flex gap-2">

@@ -25,18 +25,14 @@ class CustomerController extends Controller
 {
     public function index(Request $request)
     {
-        // $this->authorize('complaints');
-        // $ids = $request->bulk_ids;
-        // if ($request->bulk_action_btn === 'update_status'  && is_array($ids) && count($ids)) {
-        //     $data = ['status' => 1, 'worker' => $request->worker];
-        //     Employee::whereIn('id', $ids)->update($data);
-        //     return back()->with('success', translate('general.updated_successfully'));
-        // }
+
         $search      = $request['search'];
         $query_param = $search ? ['search' => $request['search']] : '';
-        if (auth()->check()) { 
+        if (auth()->check()) {
             $user = auth()->user();
-            if ($user->role_id == 2) {
+
+            // team leader customers 
+            if ($user->is_team_leader == 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
@@ -45,7 +41,10 @@ class CustomerController extends Controller
                     }
                 })->where('assign_to_team', $user->team_id)->where('booking_status', '!=', 'agreement')
                     ->latest()->paginate()->appends($query_param);
-            } elseif ($user->role_id == 3) {
+            }
+            // end team leader customers
+            // employees customers
+            if ($user->is_team_leader != 1 && $user->is_admin != 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
@@ -53,36 +52,66 @@ class CustomerController extends Controller
                             ->orWhere('id', $value);
                     }
                 })->where('assign_to', $user->id)->where('booking_status', '!=', 'agreement')
-                    ->whereDate('assign_date', '>=', Carbon::now()->subDays(14))
+                    ->whereDate('assign_date', '>=', Carbon::now()->subDays(14))->orWhere('added_by', $user->id)
                     ->latest()->paginate()->appends($query_param);
-            } elseif ($user->role_id == 1) {
+            }
+            if ($user->is_admin == 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
                         $q->Where('name', 'like', "%{$value}%")
                             ->orWhere('id', $value);
                     }
-                })->where(function ($q) {
-                    $q->whereDate('assign_date', '<=', Carbon::now()->subDays(14))
-                        ->orWhereNull('assign_date')
-                        ->orWhere('booking_status', 'booking')
-                        ->orWhere('booking_status', 'agreement');
-                })
-                    // ->whereDate('assign_date', '<=', Carbon::now()->subDays(14))->orWhere('assign_date' , null)->orWhere('booking_status' , 'agreement')
-                    ->latest()->paginate()->appends($query_param);
-            }else{
-                $customers = Customer::where('added_by' , $user->id)->when($request['search'], function ($q) use ($request) {
-                    $key = explode(' ', $request['search']);
-                    foreach ($key as $value) {
-                        $q->Where('name', 'like', "%{$value}%")
-                            ->orWhere('id', $value);
-                    }
-                })
-                    ->latest()->paginate()->appends($query_param);
+                })->latest()->paginate()->appends($query_param);
             }
+            // end employees customers
+            // if ($user->role_id == 2) {
+            //     $customers = Customer::when($request['search'], function ($q) use ($request) {
+            //         $key = explode(' ', $request['search']);
+            //         foreach ($key as $value) {
+            //             $q->Where('name', 'like', "%{$value}%")
+            //                 ->orWhere('id', $value);
+            //         }
+            //     })->where('assign_to_team', $user->team_id)->where('booking_status', '!=', 'agreement')
+            //         ->latest()->paginate()->appends($query_param);
+            // } elseif ($user->role_id == 3) {
+            //     $customers = Customer::when($request['search'], function ($q) use ($request) {
+            //         $key = explode(' ', $request['search']);
+            //         foreach ($key as $value) {
+            //             $q->Where('name', 'like', "%{$value}%")
+            //                 ->orWhere('id', $value);
+            //         }
+            //     })->where('assign_to', $user->id)->where('booking_status', '!=', 'agreement')
+            //         ->whereDate('assign_date', '>=', Carbon::now()->subDays(14))
+            //         ->latest()->paginate()->appends($query_param);
+            // } elseif ($user->role_id == 1) {
+            //     $customers = Customer::when($request['search'], function ($q) use ($request) {
+            //         $key = explode(' ', $request['search']);
+            //         foreach ($key as $value) {
+            //             $q->Where('name', 'like', "%{$value}%")
+            //                 ->orWhere('id', $value);
+            //         }
+            //     })->where(function ($q) {
+            //         $q->whereDate('assign_date', '<=', Carbon::now()->subDays(14))
+            //             ->orWhereNull('assign_date')
+            //             ->orWhere('booking_status', 'booking')
+            //             ->orWhere('booking_status', 'agreement');
+            //     })
+            //         // ->whereDate('assign_date', '<=', Carbon::now()->subDays(14))->orWhere('assign_date' , null)->orWhere('booking_status' , 'agreement')
+            //         ->latest()->paginate()->appends($query_param);
+            // } else {
+            //     $customers = Customer::where('added_by', $user->id)->when($request['search'], function ($q) use ($request) {
+            //         $key = explode(' ', $request['search']);
+            //         foreach ($key as $value) {
+            //             $q->Where('name', 'like', "%{$value}%")
+            //                 ->orWhere('id', $value);
+            //         }
+            //     })
+            //         ->latest()->paginate()->appends($query_param);
+            // }
         }
         $teams = Team::select('id', 'name')->get();
-         
+
         $data  = [
             'main'   => $customers,
             'search' => $search,

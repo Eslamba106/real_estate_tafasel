@@ -592,4 +592,7 @@
   'maintenance' => 'Maintenance',
   'total' => 'Total',
   'cash_price' => 'Cash price',
+  'show all customers' => 'Show all customers',
+  'is_admin' => 'Is admin',
+  'is_team_leader' => 'Is team leader',
 );
