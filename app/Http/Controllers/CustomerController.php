@@ -32,7 +32,7 @@ class CustomerController extends Controller
             $user = auth()->user();
 
             // team leader customers 
-            if ($user->is_team_leader == 1) {
+            if ($user->role?->is_team_leader == 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
@@ -44,7 +44,7 @@ class CustomerController extends Controller
             }
             // end team leader customers
             // employees customers
-            if ($user->is_team_leader != 1 && $user->is_admin != 1) {
+            if ($user->role?->is_team_leader != 1 && $user->role?->is_admin != 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
@@ -55,7 +55,7 @@ class CustomerController extends Controller
                     ->whereDate('assign_date', '>=', Carbon::now()->subDays(14))->orWhere('added_by', $user->id)
                     ->latest()->paginate()->appends($query_param);
             }
-            if ($user->is_admin == 1) {
+            if ($user->role?->is_admin == 1) {
                 $customers = Customer::when($request['search'], function ($q) use ($request) {
                     $key = explode(' ', $request['search']);
                     foreach ($key as $value) {
